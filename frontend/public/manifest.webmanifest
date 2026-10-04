@@ -1,0 +1,47 @@
+{
+  "name": "EdgeChat",
+  "short_name": "EdgeChat",
+  "description": "安全、高效、私密的现代化实时团队沟通空间",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#111b21",
+  "theme_color": "#008069",
+  "orientation": "any",
+  "categories": ["social", "communication", "productivity"],
+  "icons": [
+    {
+      "src": "./logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./logo.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "./logo.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "打开聊天",
+      "short_name": "聊天",
+      "description": "打开消息聊天界面",
+      "url": "./",
+      "icons": [{ "src": "./logo.svg", "sizes": "any" }]
+    },
+    {
+      "name": "偏好设置",
+      "short_name": "设置",
+      "description": "打开个人中心与系统设置",
+      "url": "./settings",
+      "icons": [{ "src": "./logo.svg", "sizes": "any" }]
+    }
+  ],
+  "prefer_related_applications": false
+}
