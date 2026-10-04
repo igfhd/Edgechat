@@ -1,0 +1,26 @@
+services:
+  edgechat-deployer:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+
+    image: edgechat-deployer:latest
+
+    container_name: edgechat-deployer
+
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:${HOST_PORT:-8000}:8000"
+
+    environment:
+      PYTHONPATH: "/app/server"
+      EDGECHAT_CONCURRENCY: "2"
+      EDGECHAT_JOB_TTL: "86400"
+      PORT: "8000"
+      EDGECHAT_DATA_DIR: "/app/server/data"
+      EDGECHAT_JOBS_DIR: "/tmp/edgechat_deploy_jobs"
+
+    volumes:
+      - ./data:/app/server/data
+      - ./tmp:/tmp/edgechat_deploy_jobs

@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edgechat — Cloudflare 一键自动化 Web 部署平台</title>
+  <link rel="stylesheet" href="style.css?v=20260822_gdrive_v4">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2'><path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/></svg>">
+</head>
+<body>
+  <div class="app-wrapper">
+    <!-- 顶部导航与品牌 -->
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="brand">
+          <div class="logo-box">
+            <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <title>Edgechat</title>
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              <path d="M12 7v4"></path>
+              <path d="M12 15h.01"></path>
+            </svg>
+          </div>
+          <div>
+            <h1 class="brand-title">Edgechat <span>Web Deployer</span></h1>
+            <p class="brand-sub">无感部署到您的 Cloudflare 边缘网络 · 全自动化资源配置 · 端到端安全</p>
+          </div>
+        </div>
+        <div class="header-badges">
+          <span class="badge badge-version" id="appVersionBadge">v1.0.0</span>
+          <span class="badge badge-outline">⚡ Serverless</span>
+          <span class="badge badge-outline">🛡️ 端到端加密</span>
+          <span class="badge badge-outline">🎭 隐藏入口伪装</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-container">
+      <!-- 视图 1：配置表单 -->
+      <section id="formView" class="view-panel active">
+        <form id="deployForm" onsubmit="return false;">
+          
+          <!-- STEP 1: Cloudflare 凭证与账号 -->
+          <div class="card">
+            <div class="card-header">
+              <div class="step-num">1</div>
+              <div>
+                <h2>Cloudflare 凭据与账号授权</h2>
+                <p class="card-desc">输入您的 Cloudflare API Token，系统将自动创建和配置所需资源</p>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="apiToken">Cloudflare API Token <span class="required">*</span></label>
+                <div class="input-action-row">
+                  <div class="input-wrapper">
+                    <input type="password" id="apiToken" name="api_token" placeholder="例如：v4Lw-xxxxxxxxx-xxxxxxxxxxxx" autocomplete="off" required>
+                    <button type="button" class="btn-icon" id="toggleTokenEye" title="切换显示/隐藏">👁️</button>
+                  </div>
+                  <button type="button" id="probeBtn" class="btn btn-secondary">
+                    <span class="btn-spinner hidden" id="probeSpinner"></span>
+                    <span id="probeBtnText">🔍 验证并拉取账号</span>
+                  </button>
+                </div>
+                <div class="form-tip">
+                  <span>💡 还没有 Token？前往 <a href="https://dash.cloudflare.com/profile/api-tokens" target="_blank" rel="noopener">Cloudflare 控制台 -> API 令牌</a> 创建令牌（推荐包含 <code>Workers</code>、<code>D1</code>、<code>KV</code>、<code>R2</code> 及 <code>Calls</code> 编辑权限以全自动开通音视频 SFU）。</span>
+                </div>
+              </div>
+
+              <!-- 探测诊断结果卡片 -->
+              <div id="probeResultBox" class="probe-result-box hidden">
+                <div class="probe-header">
+                  <span id="probeStatusBadge" class="badge"></span>
+                  <span id="probeSummaryText" class="probe-summary"></span>
+                </div>
+                <div class="probe-details" id="probeDetails">
+                  <div class="perm-tags" id="permTags"></div>
+                  <div id="accountSelectRow" class="account-select-row hidden">
+                    <label for="accountSelect">选择目标部署账号：</label>
+                    <select id="accountSelect" name="account_id"></select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 部署模式选择 (全新部署 vs 增量更新) -->
+              <div class="form-group full-width" style="margin-top: 18px;">
+                <label>部署模式选择 <span class="required">*</span></label>
+                <div class="mode-cards-grid">
+                  <label class="mode-card active" id="modeCardFresh">
+                    <input type="radio" name="deploy_mode" value="fresh" checked id="deployModeFresh">
+                    <div class="mode-card-icon">🚀</div>
+                    <div class="mode-card-info">
+                      <strong>全新部署 (Fresh Deploy)</strong>
+                      <span>首次部署至 Cloudflare。自动创建所需云端资源、初始化数据表并设置超级管理员。</span>
+                    </div>
+                  </label>
+                  <label class="mode-card" id="modeCardUpdate">
+                    <input type="radio" name="deploy_mode" value="update" id="deployModeUpdate">
+                    <div class="mode-card-icon">⚡</div>
+                    <div class="mode-card-info">
+                      <strong>增量更新 (Incremental Update)</strong>
+                      <span>复用已有资源并升级最新代码。自动执行 D1 增量数据迁移，保护历史聊天记录与现有密码。</span>
+                    </div>
+                  </label>
+                  <label class="mode-card mode-card-warning" id="modeCardResetAdmin">
+                    <input type="radio" name="deploy_mode" value="reset_admin" id="deployModeResetAdmin">
+                    <div class="mode-card-icon">👤</div>
+                    <div class="mode-card-info">
+                      <strong>重置管理员 (Reset Admin)</strong>
+                      <span>重置 D1 数据库中超级管理员账号密码，支持自动生成强密码并强制使旧会话失效。</span>
+                    </div>
+                  </label>
+                  <label class="mode-card mode-card-danger" id="modeCardUninstall">
+                    <input type="radio" name="deploy_mode" value="uninstall" id="deployModeUninstall">
+                    <div class="mode-card-icon">⚠️</div>
+                    <div class="mode-card-info">
+                      <strong>卸载/硬重置 (Reset & Clean)</strong>
+                      <span>彻底下线 Worker 服务，并可勾选销毁云端 D1 数据库、KV 缓存与 R2 存储桶。</span>
+                    </div>
+                  </label>
+                </div>
+                <div id="detectedNotice" class="detected-banner hidden"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 视图 A：增量更新专属界面 (仅增量更新模式下显示) -->
+          <div id="updateSection" class="hidden">
+            <div class="card">
+              <div class="card-header">
+                <div class="step-num">2</div>
+                <div>
+                  <h2>⚡ 确认增量更新目标</h2>
+                  <p class="card-desc">自动匹配已有云端资源，安全发布最新代码与 D1 数据库版本</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="updateWorkerName">
+                      目标 Worker 服务名称 <span class="required">*</span>
+                      <span id="workerDetectBadge" class="label-badge hidden" style="background-color: rgba(16, 185, 129, 0.2); color: #34d399;">✨ 已同步云端绑定</span>
+                    </label>
+                    <div class="input-with-action">
+                      <input type="text" id="updateWorkerName" value="cfchat" placeholder="例如：cfchat" required>
+                      <button type="button" id="btnDetectWorker" class="btn btn-secondary btn-sm" title="从 Cloudflare 重新检测该 Worker 绑定的资源">🔄 重新检测</button>
+                    </div>
+                    <small class="form-tip">输入 Worker 服务名，系统将自动通过 Cloudflare API 查询其绑定的资源</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="updateD1Name">关联 D1 数据库名称 <span class="required">*</span></label>
+                    <input type="text" id="updateD1Name" value="cfchat-db" placeholder="例如：cfchat-db" required>
+                    <small class="form-tip">用于执行增量数据库表迁移（已自动识别，可手动微调）</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="updateKvNamespace">关联 KV 命名空间名称/ID <span class="required">*</span></label>
+                    <input type="text" id="updateKvNamespace" value="SESSIONS" placeholder="例如：SESSIONS" required>
+                    <small class="form-tip">用于高频会话与分布式缓存（已自动识别，可手动微调）</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="updateR2Bucket">关联 R2 存储桶名称</label>
+                    <input type="text" id="updateR2Bucket" value="cfchat-files" placeholder="例如：cfchat-files (使用 Google Drive 可留空)">
+                    <small class="form-tip">多媒体附件存储桶（已自动识别；若使用 Google Drive 则可留空）</small>
+                  </div>
+                </div>
+
+               <div class="alert-box alert-success" style="margin-top: 14px; margin-bottom: 0;">
+                 <div class="alert-icon">🛡️</div>
+                 <div class="alert-content">
+                   <strong>无损增量升级保障：</strong>
+                   <p>您的<strong>所有历史聊天记录、用户账号、管理员密码、存储配置（R2 / Google Drive）与反代伪装均原样保留</strong>。系统将自动构建最新前端、执行新增的 D1 数据库增量迁移，并发布最新 Worker 代码。</p>
+                   <p style="margin-top: 6px; font-size: 0.85em; opacity: 0.9;">💡 <strong>Durable Objects (DO) 机制：</strong>DO 有状态实例由 Worker 核心代码自动维护与共用，天然与 Worker 深度绑定，无需也无法在控制台独立创建。</p>
+                 </div>
+               </div>
+             </div>
+           </div>
+
+            <!-- STEP 3 (增量更新): 访问安全与隐藏入口确认 (直接展示，显式提示路径设置) -->
+            <div class="card">
+              <div class="card-header">
+                <div class="step-num">3</div>
+                <div>
+                  <h2>🛡️ 访问安全与隐藏入口路径确认</h2>
+                  <p class="card-desc">确认或输入服务端的隐藏访问入口路径（支持多路径）与反代伪装域名</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="updateRoutePrefix">
+                      隐藏入口路径前缀 (ROUTE_PREFIX)
+                      <span class="label-badge">安全防护</span>
+                    </label>
+                    <input type="text" id="updateRoutePrefix" placeholder="自动继承现有路径，如需变更可直接修改 (例如：chat,secret88)">
+                    <div style="margin-top: 6px; display: flex; align-items: center; gap: 6px;">
+                      <input type="checkbox" id="updateClearPrefix" name="clear_route_prefix" style="width: auto; cursor: pointer;">
+                      <label for="updateClearPrefix" style="margin-bottom: 0; font-weight: normal; cursor: pointer; font-size: 13px; color: var(--text-secondary);">
+                        恢复根目录直接访问（清空隐藏入口路径）
+                      </label>
+                    </div>
+                    <small class="form-tip">
+                      📌 <strong>自动继承：</strong>系统已自动查询并回填云端现有路径，留空将自动保持现有隐藏入口不变。<br>
+                      ⚠️ <strong>清除入口：</strong>若勾选“恢复根目录直接访问”，本次升级后将清空隐藏路径，恢复为 <code>https://域名/</code> 直接访问。
+                    </small>
+                  </div>
+                 <div class="form-group">
+                   <label for="updateDisguiseHost">反代伪装站点 (DISGUISE_HOST)</label>
+                    <input type="text" id="updateDisguiseHost" placeholder="例如：nginx 或 bing.com (留空默认使用 nginx)">
+                    <small class="form-tip">
+                      📌 <strong>伪装站点：</strong>直接访问域名根路径或错误地址时触发伪装。可填写其它伪装网站（如 <code>bing.com</code>、<code>sephora.com</code>）或<strong>留空默认使用官方仿真 Nginx 欢迎页与 404 (nginx)</strong>。
+                    </small>
+                 </div>
+               </div>
+             </div>
+           </div>
+
+           <!-- STEP 4 (增量更新): 高级可选操作 (折叠：重置管理员密码) -->
+            <div class="card card-collapsible">
+              <div class="card-header cursor-pointer" id="updateOverrideToggle">
+                <div class="step-num">4</div>
+                <div class="flex-1">
+                  <h2>🛠️ 可选：重置超级管理员密码</h2>
+                  <p class="card-desc">仅在忘记密码或需要修改超级管理员登录凭据时展开设置（默认留空保持原密码不变）</p>
+                </div>
+                <div class="toggle-arrow" id="updateOverrideArrow">▼</div>
+              </div>
+              <div class="card-body hidden" id="updateOverrideBody">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="updateAdminUsername">管理员用户名</label>
+                    <input type="text" id="updateAdminUsername" value="admin" placeholder="默认 admin">
+                    <small class="form-tip">要确认或同步超级管理员身份的用户名 (默认 admin)</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="updateAdminPassword">新管理员密码 (留空保持原密码不变)</label>
+                    <input type="password" id="updateAdminPassword" placeholder="仅在需要重置超级管理员密码时填写，留空保持原密码不变">
+                    <small class="form-tip">若无需修改管理员密码，请保持留空。</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 视图 B：全新部署完整表单 (仅全新部署模式下显示) -->
+          <div id="freshSection">
+          <!-- STEP 2: 存储方案与云端基础设施 -->
+          <div class="card">
+            <div class="card-header">
+              <div class="step-num">2</div>
+              <div>
+                <h2>存储方案与云端基础设施</h2>
+                <p class="card-desc">自由选用 Cloudflare 原生 R2 或 Google 官方 15GB 免费网盘（免绑卡），并设置基础云资源</p>
+              </div>
+            </div>
+            <div class="card-body">
+              
+              <div class="form-group full-width">
+                <label>选择网盘与文件存储方案 <span class="required">*</span></label>
+                <div class="storage-cards-grid">
+                  <label class="storage-card active" id="storageCardR2">
+                    <input type="radio" name="storage_type" value="r2" checked id="storageTypeR2">
+                    <div class="storage-card-icon">⚡</div>
+                    <div class="storage-card-info">
+                      <strong>Cloudflare R2 对象存储 (推荐)</strong>
+                      <span>全球边缘节点低延迟，需绑定信用卡激活</span>
+                    </div>
+                  </label>
+                  <label class="storage-card" id="storageCardGDrive">
+                    <input type="radio" name="storage_type" value="gdrive" id="storageTypeGDrive">
+                    <div class="storage-card-icon">📁</div>
+                    <div class="storage-card-info">
+                      <strong>Google Drive 云端硬盘 (免绑卡 · 15GB 免费)</strong>
+                      <span>无需绑定信用卡，直接使用 Google 15GB 免费网盘</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="workerName">Worker 服务名称 <span class="required">*</span></label>
+                  <input type="text" id="workerName" name="worker_name" value="cfchat" required>
+                  <small class="form-tip">决定访问域名，如 cfchat.xxx.workers.dev</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="d1Name">D1 数据库名称 <span class="required">*</span></label>
+                  <input type="text" id="d1Name" name="d1_name" value="cfchat-db" required>
+                  <small class="form-tip">存储用户数据、消息历史与虚拟目录树</small>
+                </div>
+
+                <div class="form-group full-width">
+                  <label for="kvNamespace">KV 命名空间名称 <span class="required">*</span></label>
+                  <input type="text" id="kvNamespace" name="kv_namespace" value="SESSIONS" required>
+                  <small class="form-tip">用于高频会话、限流计数与分布式缓存</small>
+                </div>
+              </div>
+
+              <!-- R2 专属配置区 -->
+              <div id="r2ConfigBlock" class="form-grid" style="margin-top: 14px;">
+                <div class="form-group">
+                  <label for="r2Bucket">R2 存储桶名称 <span class="required">*</span></label>
+                  <input type="text" id="r2Bucket" name="r2_bucket" value="cfchat-files">
+                  <small class="form-tip">用于多媒体文件与大型附件存储（若不存在将自动创建）</small>
+                </div>
+                <div class="form-group">
+                  <label for="r2AccessKeyId">R2 S3 Access Key ID (选填)</label>
+                  <input type="text" id="r2AccessKeyId" name="r2_access_key_id" placeholder="选填，可在管理后台配置">
+                </div>
+                <div class="form-group full-width">
+                  <label for="r2SecretAccessKey">R2 S3 Secret Access Key (选填)</label>
+                  <input type="password" id="r2SecretAccessKey" name="r2_secret_access_key" placeholder="选填">
+                </div>
+              </div>
+
+              <!-- Google Drive 4 个关键选项配置区 (动态展开) -->
+              <div id="gdriveConfigBlock" class="hidden gdrive-panel">
+                <h3 class="sub-head">📁 Google Drive OAuth 凭据配置（4 个关键选项）</h3>
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="gdriveClientId">1. 账号 ID (Client ID) <span class="required">*</span></label>
+                    <input type="text" id="gdriveClientId" name="gdrive_client_id" placeholder="例如: 123456-xxx.apps.googleusercontent.com">
+                    <small class="form-tip">Google Cloud 凭据中创建的 OAuth 2.0 客户端 ID</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="gdriveClientSecret">2. 账号密钥 (Client Secret) <span class="required">*</span></label>
+                    <input type="password" id="gdriveClientSecret" name="gdrive_client_secret" placeholder="例如: GOCSPX-xxxxxxxxxxxx">
+                    <small class="form-tip">OAuth 2.0 客户端密钥</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="gdriveRefreshToken">3. 刷新令牌 (Refresh Token) <span class="required">*</span></label>
+                    <input type="password" id="gdriveRefreshToken" name="gdrive_refresh_token" placeholder="例如: 1//04xxxxxxxxxxxx">
+                    <small class="form-tip">通过 OAuth Playground 或 rclone 获取的 Refresh Token</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="gdriveFolderId">4. 根文件夹 ID (Folder ID)</label>
+                    <input type="text" id="gdriveFolderId" name="gdrive_folder_id" placeholder="例如: 1AbC_xyz (留空则默认为 root 根目录)">
+                    <small class="form-tip">Google Drive 存放文件的目标根文件夹 ID</small>
+                  </div>
+                </div>
+                <div class="helper-box">
+                  💡 <strong>Google Drive 凭据获取简易指引：</strong><br>
+                  1. 前往 <a href="https://console.cloud.google.com/" target="_blank" rel="noopener">Google Cloud Console</a> 创建项目并启用 <strong>Google Drive API</strong>。<br>
+                  2. 在「OAuth 同意屏幕」配置后，创建 <strong>OAuth 客户端 ID</strong>（应用类型选 Web 应用程序），获取 Client ID 与 Secret。<br>
+                  3. 使用 OAuth Playground 或 rclone 获取 <strong>Refresh Token</strong> 填入上方。
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- STEP 3: 访问安全与路由伪装 (特色核心功能) -->
+          <div class="card">
+            <div class="card-header">
+              <div class="step-num">3</div>
+              <div>
+                <h2>访问安全与隐藏入口伪装</h2>
+                <p class="card-desc">全网独创防扫描机制：自定义隐蔽访问路径，未授权访问将反代展示真实伪装站点</p>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="routePrefix">
+                    隐藏入口路径前缀 (ROUTE_PREFIX)
+                    <span class="label-badge">安全防护</span>
+                  </label>
+                  <div class="input-action-row">
+                    <input type="text" id="routePrefix" name="route_prefix" placeholder="例如：chat,secret88 (留空为根目录直接访问)">
+                    <button type="button" id="randPrefixBtn" class="btn btn-secondary btn-sm" title="随机生成安全入口前缀">🎲 随机生成</button>
+                  </div>
+                  <small class="form-tip">配置后只有 <code>https://域名/&lt;前缀&gt;/</code> 才能进入聊天与后台；支持逗号分隔多个入口。</small>
+                </div>
+
+               <div class="form-group">
+                 <label for="disguiseHost">
+                   反代伪装站点 (DISGUISE_HOST)
+                   <span class="label-badge">隐身伪装</span>
+                 </label>
+                 <div class="input-select-combo">
+                   <select id="disguiseSelect">
+                      <option value="nginx" selected>Nginx 官方欢迎页与 404 (仿真极简 - 推荐默认)</option>
+                      <option value="fentybeauty.com">Fenty Beauty 精美美妆商城</option>
+                      <option value="sephora.com">Sephora 丝芙兰官网</option>
+                      <option value="kyliecosmetics.com">Kylie Cosmetics 潮流美妆</option>
+                      <option value="100percentpure.com">100% Pure 天然护肤</option>
+                      <option value="wholydose.com">Wholy Dose 健康营养</option>
+                      <option value="custom">-- 自定义反代域名 --</option>
+                    </select>
+                    <input type="text" id="disguiseHost" name="disguise_host" value="nginx" placeholder="自定义域名，如 bing.com" class="hidden">
+                  </div>
+                  <small class="form-tip">访客直接访问域名根路径或错误地址时，Worker 自动反代此站内容进行伪装。</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 4: 管理员账户配置 -->
+          <div class="card">
+            <div class="card-header">
+              <div class="step-num">4</div>
+              <div>
+                <h2>系统管理员初始配置</h2>
+                <p class="card-desc">设置系统初次部署时的初始超级管理员账号</p>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="adminUsername">管理员用户名 <span class="required">*</span></label>
+                  <input type="text" id="adminUsername" name="admin_username" value="admin" required>
+                </div>
+                <div class="form-group">
+                  <label for="adminPassword">管理员登录密码</label>
+                  <div class="input-action-row">
+                    <div class="input-wrapper">
+                      <input type="password" id="adminPassword" name="admin_password" placeholder="留空将自动生成 16 位高强密码">
+                      <button type="button" class="btn-icon" id="toggleAdminPassEye" title="查看明文">👁️</button>
+                    </div>
+                    <button type="button" id="randPassBtn" class="btn btn-secondary btn-sm" title="生成强随机密码">🎲 强密码</button>
+                  </div>
+                </div>
+                <div class="form-group full-width">
+                  <label for="adminDisplayName">管理员显示昵称</label>
+                  <input type="text" id="adminDisplayName" name="admin_display_name" value="Administrator">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 5: 音视频通话与高级选项 (折叠) -->
+          <div class="card card-collapsible">
+            <div class="card-header cursor-pointer" id="advancedToggle">
+              <div class="step-num">5</div>
+              <div class="flex-1">
+                <h2>Cloudflare Calls WebRTC 音视频通话（可选扩展）</h2>
+                <p class="card-desc">配置实时音视频通话 SFU 参数（点击展开）</p>
+              </div>
+              <div class="toggle-arrow" id="advancedArrow">▼</div>
+            </div>
+            <div class="card-body hidden" id="advancedBody">
+              <p class="form-tip" style="margin-bottom: 14px;">留空时，部署器将尝试自动创建；也可在 <a href="https://dash.cloudflare.com/" target="_blank" rel="noopener">Cloudflare 控制台 -> Calls</a> 中开启并手动创建 App 填入下方：</p>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="callsAppId">Calls App ID (UID)</label>
+                  <input type="text" id="callsAppId" name="calls_app_id" placeholder="可选，如：e984xxxxxxxxxxxx">
+                </div>
+                <div class="form-group">
+                  <label for="callsAppSecret">Calls App Secret</label>
+                  <input type="password" id="callsAppSecret" name="calls_app_secret" placeholder="可选">
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+
+          <!-- 视图 C：重置管理员密码专属界面 (仅重置管理员模式下显示) -->
+          <div id="resetAdminSection" class="hidden">
+            <div class="card">
+              <div class="card-header">
+                <div class="step-num">2</div>
+                <div>
+                  <h2>👤 重置系统管理员登录密码</h2>
+                  <p class="card-desc">直连远程 D1 数据库，更新指定管理员登录密码并作废其历史在线会话</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="resetAdminWorkerName">目标 Worker 服务名称 <span class="form-tip-inline">(可选，用于反解数据库)</span></label>
+                    <div class="input-with-action">
+                      <input type="text" id="resetAdminWorkerName" value="cfchat" placeholder="例如：cfchat">
+                      <button type="button" id="btnDetectResetAdmin" class="btn btn-secondary btn-sm" title="从 Cloudflare 查询关联 D1 数据库">🔄 检测</button>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="resetAdminD1Name">目标 D1 数据库名称 <span class="required">*</span></label>
+                    <input type="text" id="resetAdminD1Name" value="cfchat-db" placeholder="例如：cfchat-db" required>
+                    <small class="form-tip">需要重置密码的用户所在的 D1 数据库名称</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="resetAdminUsername">管理员用户名 <span class="required">*</span></label>
+                    <input type="text" id="resetAdminUsername" value="admin" placeholder="默认 admin" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="resetAdminPassword">新管理员密码</label>
+                    <div class="input-action-row">
+                      <div class="input-wrapper">
+                        <input type="password" id="resetAdminPassword" placeholder="留空将自动生成 16 位强随机密码">
+                        <button type="button" class="btn-icon" id="toggleResetAdminPassEye" title="查看明文">👁️</button>
+                      </div>
+                      <button type="button" id="randResetAdminPassBtn" class="btn btn-secondary btn-sm" title="生成强随机密码">🎲 强密码</button>
+                    </div>
+                    <small class="form-tip">留空将由系统自动生成强随机密码，重置完成后在结果中明文展示</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 视图 D：卸载下线与云端资源清理专属界面 (仅卸载模式下显示) -->
+          <div id="uninstallSection" class="hidden">
+            <div class="card" style="border-color: rgba(239, 68, 68, 0.4);">
+              <div class="card-header" style="border-bottom-color: rgba(239, 68, 68, 0.2);">
+                <div class="step-num" style="background: rgba(239, 68, 68, 0.2); color: #f87171;">⚠️</div>
+                <div>
+                  <h2 style="color: #fca5a5;">⚠️ 卸载下线与云端资源清理 (硬重置)</h2>
+                  <p class="card-desc">永久删除选中的 Cloudflare 边缘 Worker 服务与关联数据库/存储空间</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="danger-banner" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); padding: 14px 16px; border-radius: 8px; margin-bottom: 18px; color: #fca5a5; font-size: 13.5px; line-height: 1.5;">
+                  <strong>⚠️ 危险操作提示：</strong><br>
+                  此操作将通过 Cloudflare API 永久销毁云端基础设施。若勾选删除 D1 数据库，<strong>所有聊天记录、注册用户与配置将无法找回</strong>！请务必慎重操作。
+                </div>
+
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="uninstallWorkerName">目标 Worker 服务名称 <span class="required">*</span></label>
+                    <div class="input-with-action">
+                      <input type="text" id="uninstallWorkerName" value="cfchat" placeholder="例如：cfchat" required>
+                      <button type="button" id="btnDetectUninstall" class="btn btn-secondary btn-sm" title="自动读取 Worker 关联的云端资源">🔄 检测关联</button>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="uninstallD1Name">目标 D1 数据库名称</label>
+                    <input type="text" id="uninstallD1Name" value="cfchat-db" placeholder="例如：cfchat-db">
+                  </div>
+                  <div class="form-group">
+                    <label for="uninstallKvNamespace">目标 KV 命名空间名称/ID</label>
+                    <input type="text" id="uninstallKvNamespace" value="SESSIONS" placeholder="例如：SESSIONS">
+                  </div>
+                  <div class="form-group">
+                    <label for="uninstallR2Bucket">目标 R2 存储桶名称</label>
+                    <input type="text" id="uninstallR2Bucket" value="cfchat-files" placeholder="例如：cfchat-files">
+                  </div>
+                </div>
+
+                <div class="form-group full-width" style="margin-top: 14px;">
+                  <label>勾选本次清理项目 <span class="required">*</span></label>
+                  <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 8px;">
+                    <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer;">
+                      <input type="checkbox" id="delWorkerCheck" checked style="width: 16px; height: 16px; accent-color: var(--error);">
+                      <span>🗑️ 删除 Cloudflare Worker 服务（立即下线网站）</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer;">
+                      <input type="checkbox" id="delD1Check" checked style="width: 16px; height: 16px; accent-color: var(--error);">
+                      <span style="color: #fca5a5;">💥 销毁 D1 数据库（清除所有历史聊天记录与用户，不可逆）</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer;">
+                      <input type="checkbox" id="delKvCheck" checked style="width: 16px; height: 16px; accent-color: var(--error);">
+                      <span>🧹 销毁 KV 缓存空间（清除分布式 Session 缓存）</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer;">
+                      <input type="checkbox" id="delR2Check" style="width: 16px; height: 16px; accent-color: var(--error);">
+                      <span>📦 尝试删除 R2 存储桶（注：若非空需先在 CF 控制台清空文件）</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-group full-width" style="margin-top: 14px;">
+                  <label for="uninstallConfirmInput" style="color: #f87171;">
+                    安全防误触确认 <span class="required">*</span>
+                  </label>
+                  <input type="text" id="uninstallConfirmInput" placeholder="请输入 DELETE 或目标 Worker 服务名以确认执行" style="border-color: rgba(239, 68, 68, 0.5);">
+                  <small class="form-tip" style="color: #fca5a5;">为了防止误点击造成损失，必须在输入框准确输入 <code>DELETE</code> 或 Worker 名称。</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 提交按钮区 -->
+          <div class="submit-box">
+            <button type="submit" id="startDeployBtn" class="btn btn-primary btn-lg">
+              <span>🚀 开始一键部署到 Cloudflare</span>
+            </button>
+            <div class="privacy-guarantee">
+              <span class="privacy-icon">🛡️</span>
+              <span><strong>隐私安全保证：</strong>您的 API Token 仅在部署进程内存中即时使用，绝不写入任何数据库；任务临时数据最多保存 24 小时后自动物理销毁，部署完成后您也可随时一键立即销毁。</span>
+            </div>
+          </div>
+
+        </form>
+      </section>
+
+      <!-- 视图 2：部署进度控制台 -->
+      <section id="deployView" class="view-panel">
+        <div class="card">
+          <div class="card-header">
+            <div class="status-indicator">
+              <span class="pulse-dot"></span>
+              <span id="deployStatusTitle">正在部署 Edgechat...</span>
+            </div>
+            <div class="progress-badge" id="progressPercent">0%</div>
+          </div>
+          <div class="card-body">
+            <!-- 进度条 -->
+            <div class="progress-container">
+              <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+            </div>
+
+            <!-- 当前状态描述 -->
+            <div class="current-step-box" id="currentStepText">正在准备部署沙盒环境...</div>
+
+            <!-- 终端日志窗口 -->
+            <div class="terminal-wrapper">
+              <div class="terminal-header">
+                <div class="terminal-dots">
+                  <span class="dot red"></span>
+                  <span class="dot yellow"></span>
+                  <span class="dot green"></span>
+                </div>
+                <span class="terminal-title">Cloudflare 边缘部署控制台</span>
+                <div class="terminal-actions">
+                  <button type="button" id="copyLogsBtn" class="btn btn-xs">复制日志</button>
+                  <button type="button" id="autoScrollToggle" class="btn btn-xs active">自动滚屏: 开</button>
+                </div>
+              </div>
+              <div class="terminal-body" id="terminalLogs"></div>
+            </div>
+
+            <!-- 部署失败时的错误提示 -->
+            <div id="deployErrorBox" class="alert-box alert-error hidden">
+              <div class="alert-icon">❌</div>
+              <div class="alert-content">
+                <strong>部署遇到错误：</strong>
+                <p id="deployErrorMessage"></p>
+                <div class="mt-3">
+                  <button type="button" id="retryConfigBtn" class="btn btn-secondary btn-sm">返回修改配置</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- 视图 3：部署成功交付面板 -->
+      <section id="successView" class="view-panel">
+        <div class="card success-card">
+          <div class="success-header">
+            <div class="success-icon" id="resSuccessIcon">🎉</div>
+            <h2 id="resSuccessTitle">Edgechat 已成功部署至 Cloudflare！</h2>
+            <p id="resSuccessSubtitle">您的端到端加密即时通讯服务已在全球边缘节点上线运行</p>
+          </div>
+
+          <div class="card-body">
+            <!-- 访问地址卡片 -->
+            <div class="result-section" id="resAccessSection">
+              <h3 class="result-title">🌐 服务访问入口</h3>
+              
+              <div class="result-item highlight">
+                <div class="result-item-info">
+                  <span class="result-tag tag-primary">🔒 真实聊天入口</span>
+                  <div class="result-url" id="resRealUrl">-</div>
+                  <small class="result-hint">请妥善保存此链接，只有通过该地址才能访问真实的 Edgechat 界面</small>
+                </div>
+                <div class="result-actions">
+                  <button type="button" class="btn btn-sm btn-primary copy-btn" data-target="resRealUrl">复制链接</button>
+                  <a id="resRealLink" href="#" target="_blank" class="btn btn-sm btn-outline">直接打开</a>
+                </div>
+              </div>
+
+              <div class="result-item">
+                <div class="result-item-info">
+                  <span class="result-tag tag-secondary">🔑 系统管理后台</span>
+                  <div class="result-url" id="resAdminUrl">-</div>
+                  <small class="result-hint">用于用户管理、存储配置、音视频设置与系统监控</small>
+                </div>
+                <div class="result-actions">
+                  <button type="button" class="btn btn-sm copy-btn" data-target="resAdminUrl">复制后台链接</button>
+                  <a id="resAdminLink" href="#" target="_blank" class="btn btn-sm btn-outline">打开后台</a>
+                </div>
+              </div>
+
+              <div class="result-item">
+                <div class="result-item-info">
+                  <span class="result-tag tag-disguise">🎭 伪装反代访问</span>
+                  <div class="result-url" id="resDisguiseUrl">-</div>
+                  <small class="result-hint">直接访问根路径将反代展示伪装网站：<span id="resDisguiseHost"></span></small>
+                </div>
+                <div class="result-actions">
+                  <button type="button" class="btn btn-sm copy-btn" data-target="resDisguiseUrl">复制</button>
+                  <a id="resDisguiseLink" href="#" target="_blank" class="btn btn-sm btn-outline">查看伪装效果</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- 卸载结果专用展示区 -->
+            <div class="result-section hidden" id="resUninstallSection">
+              <h3 class="result-title" style="color: #fca5a5;">🗑️ 资源卸载与清理明细</h3>
+              <div class="credentials-box" id="resUninstallSummary" style="color: #fca5a5; line-height: 1.6;"></div>
+            </div>
+
+            <!-- 管理员凭据卡片 -->
+            <div class="result-section" id="resCredSection">
+              <h3 class="result-title" id="resCredTitle">👤 初始管理员凭据</h3>
+              <div class="credentials-box">
+                <div class="cred-item">
+                  <span class="cred-label">管理员用户名：</span>
+                  <strong id="resAdminUser" class="cred-value">admin</strong>
+                  <button type="button" class="btn btn-xs copy-btn" data-target="resAdminUser">复制</button>
+                </div>
+                <div class="cred-item">
+                  <span class="cred-label">管理员密码：</span>
+                  <strong id="resAdminPass" class="cred-value secret-value">******</strong>
+                  <button type="button" id="toggleResPassEye" class="btn btn-xs">显示明文</button>
+                  <button type="button" class="btn btn-xs copy-btn" data-target="resAdminPass">复制密码</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 资源清单详情 -->
+            <div class="result-section" id="resResourceSection">
+              <div class="collapsible-summary" id="resResourceToggle">
+                <span>📋 查看绑定的 Cloudflare 资源清单</span>
+                <span id="resResourceArrow">▼</span>
+              </div>
+              <div class="resource-table hidden" id="resResourceTable">
+                <div class="res-row"><span>Edgechat 版本:</span> <strong id="resVersion" style="color: #60a5fa;">v1.0.0</strong></div>
+                <div class="res-row"><span>Worker 服务名:</span> <code id="resWorkerName">-</code></div>
+                <div class="res-row"><span>Account ID:</span> <code id="resAccountId">-</code></div>
+                <div class="res-row"><span>D1 Database ID:</span> <code id="resD1Id">-</code></div>
+                <div class="res-row"><span>KV Namespace ID:</span> <code id="resKvId">-</code></div>
+                <div class="res-row"><span>存储方案:</span> <span id="resStorageStatus" class="badge badge-sm"></span></div>
+                <div class="res-row"><span>R2 存储状态:</span> <span id="resR2Status" class="badge badge-sm"></span></div>
+                <div class="res-row"><span>Calls 音视频 SFU:</span> <span id="resCallsStatus" class="badge badge-sm"></span></div>
+                <div class="res-row"><span>部署时间:</span> <span id="resDeployedAt">-</span></div>
+              </div>
+            </div>
+
+            <!-- 底部操作与物理销毁按钮 -->
+            <div class="success-actions">
+              <button type="button" id="downloadBackupBtn" class="btn btn-secondary">
+                📥 导出部署凭证 (.txt)
+              </button>
+              
+              <!-- 核心：立即销毁按钮 -->
+              <button type="button" id="destroyJobBtn" class="btn btn-danger">
+                🗑️ 立即销毁本次部署数据与日志
+              </button>
+            </div>
+
+            <!-- 销毁结果提示 -->
+            <div id="destroyedNotice" class="alert-box alert-success hidden">
+              <div class="alert-icon">✅</div>
+              <div class="alert-content">
+                <strong>数据已物理销毁：</strong>
+                <p>本次部署在服务器上的所有临时目录、配置文件与日志已彻底清空。请保管好上方已复制的访问链接与密码。</p>
+              </div>
+            </div>
+
+            <div class="privacy-note">
+              <span>⏱️ 未手动销毁的数据将在 24 小时后由后台守护程序自动物理粉碎。</span>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="site-footer">
+      <p>Edgechat <span id="footerVersion" style="color: #60a5fa; font-weight: 500;">v1.0.0</span> — 安全·私有·高弹性的 Cloudflare 边缘即时通讯体系</p>
+    </footer>
+  </div>
+
+  <script src="app.js?v=20260822_gdrive_v4"></script>
+</body>
+</html>
