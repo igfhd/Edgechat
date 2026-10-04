@@ -1,0 +1,2403 @@
+/* ==========================================================================
+   EdgeChat 全局暗黑模式系统 (Global Dark Theme Design System)
+   ========================================================================== */
+
+html[data-theme="dark"],
+html.dark {
+  color-scheme: dark;
+
+  /* 基础与表面色彩 */
+  --bg: #0b0f19;
+  --bg-body: #0b0f19;
+  --surface: #161b26;
+  --surface-0: #111622;
+  --surface-1: #161b26;
+  --surface-2: #1e2433;
+  --surface-3: #262e40;
+  --surface-floating: #1a202c;
+
+  /* 文字色彩 */
+  --text: #f1f5f9;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-soft: #94a3b8;
+  --text-muted: #64748b;
+  --text-faint: #475569;
+
+  /* 边框与分割线 */
+  --border: #283347;
+  --border-subtle: #1e293b;
+  --border-strong: #3b475e;
+
+  /* 品牌色与状态色微调（暗色下适当提升明度） */
+  --primary: #00a884;
+  --primary-hover: #008f70;
+  --primary-light: rgba(0, 168, 132, 0.15);
+
+  --accent: #38bdf8;
+  --accent-soft: rgba(56, 189, 248, 0.15);
+
+  --danger: #f87171;
+  --danger-bg: rgba(239, 68, 68, 0.15);
+
+  --success: #34d399;
+  --success-bg: rgba(16, 185, 129, 0.15);
+
+  --warning: #fbbf24;
+  --warning-bg: rgba(245, 158, 11, 0.15);
+
+  /* 液态玻璃 (Liquid Glass) 暗黑模式滤镜与光影 */
+  --glass-bg: rgba(22, 27, 38, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+
+  --lg-base-tint: rgba(0, 0, 0, 0.45);
+  --lg-rim-light: rgba(255, 255, 255, 0.12);
+  --lg-internal-volume: inset 0 2px 10px rgba(255, 255, 255, 0.08),
+                        inset 0 -2px 8px rgba(0, 0, 0, 0.3);
+  --lg-drop-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+
+  /* Admin 后台变量 */
+  --admin-workspace: #0b0f19;
+  --admin-panel: #161b26;
+  --admin-subtle: #1a202c;
+  --admin-active: #222938;
+  --admin-border: #283347;
+  --admin-border-strong: #3b475e;
+  --admin-text: #f1f5f9;
+  --admin-muted: #94a3b8;
+  --admin-faint: #64748b;
+  --admin-ink: #ffffff;
+  --admin-ink-hover: #e2e8f0;
+}
+
+/* ==========================================================================
+   全局双色深邃流体背景 (Dark Fluid Atmosphere)
+   ========================================================================== */
+
+html[data-theme="dark"] body,
+html.dark body {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(0, 168, 132, 0.12), transparent 32%),
+    radial-gradient(circle at 88% 16%, rgba(56, 189, 248, 0.12), transparent 34%),
+    radial-gradient(circle at 76% 88%, rgba(56, 189, 248, 0.08), transparent 30%),
+    radial-gradient(circle at 28% 72%, rgba(0, 168, 132, 0.08), transparent 26%),
+    linear-gradient(180deg, #090d15 0%, #0d121c 100%);
+  color: var(--text);
+}
+
+html[data-theme="dark"] body::before,
+html.dark body::before {
+  background: radial-gradient(circle, rgba(0, 168, 132, 0.18), rgba(0, 168, 132, 0.03) 70%, transparent);
+}
+
+html[data-theme="dark"] body::after,
+html.dark body::after {
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.16), rgba(56, 189, 248, 0.02) 70%, transparent);
+}
+
+/* ==========================================================================
+   通用卡片与窗口结构 (Surfaces, Cards, App Shell)
+   ========================================================================== */
+
+html[data-theme="dark"] .page-card,
+html.dark .page-card,
+html[data-theme="dark"] .login-card,
+html.dark .login-card,
+html[data-theme="dark"] .app-window,
+html.dark .app-window {
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+html[data-theme="dark"] .ui-surface,
+html.dark .ui-surface {
+  background: var(--surface-1);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .ui-surface--soft,
+html.dark .ui-surface--soft {
+  background: var(--surface-0);
+  border-color: var(--border-subtle);
+}
+
+html[data-theme="dark"] .ui-surface--strong,
+html.dark .ui-surface--strong {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+}
+
+html[data-theme="dark"] .ui-button--secondary,
+html.dark .ui-button--secondary {
+  background: var(--surface-2);
+  border-color: var(--border);
+  color: var(--text-secondary);
+}
+
+html[data-theme="dark"] .ui-button--secondary:hover:not(:disabled),
+html.dark .ui-button--secondary:hover:not(:disabled) {
+  background: var(--surface-3);
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .ui-button--ghost:hover:not(:disabled),
+html.dark .ui-button--ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+}
+
+/* 表单输入控件 */
+html[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+html.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+html[data-theme="dark"] textarea,
+html.dark textarea,
+html[data-theme="dark"] select,
+html.dark select {
+  background: rgba(17, 22, 34, 0.85) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+html[data-theme="dark"] input::placeholder,
+html.dark input::placeholder,
+html[data-theme="dark"] textarea::placeholder,
+html.dark textarea::placeholder {
+  color: #64748b !important;
+}
+
+html[data-theme="dark"] input:focus,
+html.dark input:focus,
+html[data-theme="dark"] textarea:focus,
+html.dark textarea:focus {
+  border-color: var(--primary) !important;
+  background: rgba(22, 27, 38, 0.95) !important;
+}
+
+/* ==========================================================================
+   聊天主界面 (Chat Module)
+   ========================================================================== */
+
+/* 顶层布局容器背景 */
+html[data-theme="dark"] .chat-layout,
+html.dark .chat-layout {
+  background: #0d121c !important;
+}
+
+/* 左侧会话列表侧边栏 */
+html[data-theme="dark"] .left-sidebar,
+html.dark .left-sidebar {
+  background: #111622 !important;
+  border-right-color: var(--border) !important;
+}
+
+html[data-theme="dark"] .left-sidebar .sidebar-inner,
+html.dark .left-sidebar .sidebar-inner {
+  background: #111622 !important;
+}
+
+/* 左侧侧边栏顶部 header */
+html[data-theme="dark"] .sidebar-header,
+html.dark .sidebar-header {
+  background: #111622 !important;
+  border-bottom-color: var(--border, #283347) !important;
+}
+
+/* 左侧会话搜索栏 */
+html[data-theme="dark"] .sidebar-search-wrap,
+html.dark .sidebar-search-wrap {
+  background: #111622 !important;
+}
+
+html[data-theme="dark"] .sidebar-search-box,
+html.dark .sidebar-search-box {
+  background: #1e2638 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+html[data-theme="dark"] .sidebar-search-box:focus-within,
+html.dark .sidebar-search-box:focus-within {
+  background: #242f45 !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25) !important;
+}
+
+html[data-theme="dark"] .sidebar-search-input,
+html.dark .sidebar-search-input {
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .sidebar-search-input::placeholder,
+html.dark .sidebar-search-input::placeholder {
+  color: #64748b !important;
+}
+
+html[data-theme="dark"] .sidebar-search-clear,
+html.dark .sidebar-search-clear {
+  background: #334155 !important;
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .sidebar-search-clear:hover,
+html.dark .sidebar-search-clear:hover {
+  background: #475569 !important;
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .sidebar-search-empty__title,
+html.dark .sidebar-search-empty__title {
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .sidebar-search-empty__desc,
+html.dark .sidebar-search-empty__desc {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .sidebar-search-empty__icon,
+html.dark .sidebar-search-empty__icon {
+  background: rgba(16, 185, 129, 0.15) !important;
+  color: #10b981 !important;
+}
+
+html[data-theme="dark"] .sidebar-search-empty__btn,
+html.dark .sidebar-search-empty__btn {
+  background: #1e2638 !important;
+  border-color: #334155 !important;
+  color: #10b981 !important;
+}
+
+html[data-theme="dark"] .sidebar-search-empty__btn:hover,
+html.dark .sidebar-search-empty__btn:hover {
+  background: #283347 !important;
+  border-color: #10b981 !important;
+}
+
+/* 右侧图标导航 Dock */
+html[data-theme="dark"] .right-sidebar,
+html.dark .right-sidebar {
+  background: #0f1420 !important;
+  border-right-color: var(--border) !important;
+}
+
+html[data-theme="dark"] .right-sidebar-inner,
+html.dark .right-sidebar-inner {
+  background: #0f1420 !important;
+}
+
+html[data-theme="dark"] .right-sidebar-action,
+html.dark .right-sidebar-action,
+html[data-theme="dark"] .right-sidebar-user,
+html.dark .right-sidebar-user {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .right-sidebar-action:hover,
+html.dark .right-sidebar-action:hover,
+html[data-theme="dark"] .right-sidebar-user:hover,
+html.dark .right-sidebar-user:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .right-sidebar-action--danger:hover,
+html.dark .right-sidebar-action--danger:hover {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #f87171 !important;
+}
+
+/* 会话列表项 */
+html[data-theme="dark"] .sidebar-item,
+html.dark .sidebar-item {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+html[data-theme="dark"] .sidebar-item:hover,
+html.dark .sidebar-item:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+html[data-theme="dark"] .sidebar-item--pinned,
+html.dark .sidebar-item--pinned {
+  background: rgba(255, 255, 255, 0.025) !important;
+}
+
+html[data-theme="dark"] .sidebar-item--pinned:hover,
+html.dark .sidebar-item--pinned:hover {
+  background: rgba(255, 255, 255, 0.055) !important;
+}
+
+html[data-theme="dark"] .sidebar-item__top strong,
+html.dark .sidebar-item__top strong {
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .sidebar-item__time,
+html.dark .sidebar-item__time {
+  color: #64748b !important;
+}
+
+html[data-theme="dark"] .sidebar-item__preview,
+html.dark .sidebar-item__preview {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .sidebar-item--active,
+html.dark .sidebar-item--active {
+  background: linear-gradient(135deg, rgba(0, 168, 132, 0.22) 0%, rgba(30, 41, 59, 0.75) 100%) !important;
+  border-color: rgba(0, 168, 132, 0.38) !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), 0 0 12px rgba(0, 168, 132, 0.15) !important;
+}
+
+html[data-theme="dark"] .sidebar-item--active::before,
+html.dark .sidebar-item--active::before {
+  background: #10b981 !important;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6) !important;
+}
+
+html[data-theme="dark"] .sidebar-item--active .sidebar-item__top strong,
+html.dark .sidebar-item--active .sidebar-item__top strong {
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .sidebar-item--active .sidebar-item__time,
+html.dark .sidebar-item--active .sidebar-item__time {
+  color: #2dd4bf !important;
+}
+
+html[data-theme="dark"] .sidebar-unread-badge--muted,
+html.dark .sidebar-unread-badge--muted {
+  background: #475569 !important;
+  color: #cbd5e1 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 群聊与私聊在暗色模式下的专属风格 */
+html[data-theme="dark"] .sidebar-avatar-badge,
+html.dark .sidebar-avatar-badge {
+  border-color: #111622 !important;
+}
+
+html[data-theme="dark"] .sidebar-avatar-badge--public,
+html.dark .sidebar-avatar-badge--public {
+  background: #0284c7 !important;
+}
+
+html[data-theme="dark"] .sidebar-avatar-badge--private,
+html.dark .sidebar-avatar-badge--private {
+  background: #6366f1 !important;
+}
+
+html[data-theme="dark"] .sidebar-tag--group,
+html.dark .sidebar-tag--group {
+  color: #a5b4fc !important;
+  background: rgba(99, 102, 241, 0.2) !important;
+  border-color: rgba(129, 140, 248, 0.3) !important;
+}
+
+html[data-theme="dark"] .sidebar-tag--public,
+html.dark .sidebar-tag--public {
+  color: #38bdf8 !important;
+  background: rgba(2, 132, 199, 0.2) !important;
+  border-color: rgba(56, 189, 248, 0.32) !important;
+}
+
+html[data-theme="dark"] .sidebar-tag--private,
+html.dark .sidebar-tag--private {
+  color: #a5b4fc !important;
+  background: rgba(99, 102, 241, 0.2) !important;
+  border-color: rgba(129, 140, 248, 0.3) !important;
+}
+
+html[data-theme="dark"] .sidebar-tag--general,
+html.dark .sidebar-tag--general {
+  color: #fcd34d !important;
+  background: rgba(245, 158, 11, 0.2) !important;
+  border-color: rgba(245, 158, 11, 0.32) !important;
+}
+
+html[data-theme="dark"] .sidebar-tag--dm,
+html.dark .sidebar-tag--dm {
+  color: #34d399 !important;
+  background: rgba(16, 185, 129, 0.18) !important;
+  border-color: rgba(52, 211, 153, 0.28) !important;
+}
+
+html[data-theme="dark"] .sidebar-item--group:hover,
+html.dark .sidebar-item--group:hover {
+  background: rgba(99, 102, 241, 0.08) !important;
+}
+
+html[data-theme="dark"] .sidebar-item--group.sidebar-item--active,
+html.dark .sidebar-item--group.sidebar-item--active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(30, 41, 59, 0.85) 100%) !important;
+  border-color: rgba(129, 140, 248, 0.4) !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), 0 0 12px rgba(99, 102, 241, 0.2) !important;
+}
+
+html[data-theme="dark"] .sidebar-item--group.sidebar-item--active::before,
+html.dark .sidebar-item--group.sidebar-item--active::before {
+  background: #818cf8 !important;
+  box-shadow: 0 0 8px rgba(129, 140, 248, 0.6) !important;
+}
+
+html[data-theme="dark"] .sidebar-item--group.sidebar-item--active .sidebar-item__top strong,
+html.dark .sidebar-item--group.sidebar-item--active .sidebar-item__top strong {
+  color: #e0e7ff !important;
+}
+
+html[data-theme="dark"] .sidebar-item--group.sidebar-item--active .sidebar-item__time,
+html.dark .sidebar-item--group.sidebar-item--active .sidebar-item__time {
+  color: #a5b4fc !important;
+}
+
+/* 公开群暗色模式 */
+html[data-theme="dark"] .sidebar-item--public:hover,
+html.dark .sidebar-item--public:hover {
+  background: rgba(2, 132, 199, 0.08) !important;
+}
+
+html[data-theme="dark"] .sidebar-item--public.sidebar-item--active,
+html.dark .sidebar-item--public.sidebar-item--active {
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.25) 0%, rgba(30, 41, 59, 0.85) 100%) !important;
+  border-color: rgba(56, 189, 248, 0.4) !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), 0 0 12px rgba(2, 132, 199, 0.2) !important;
+}
+
+html[data-theme="dark"] .sidebar-item--public.sidebar-item--active::before,
+html.dark .sidebar-item--public.sidebar-item--active::before {
+  background: #38bdf8 !important;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.6) !important;
+}
+
+html[data-theme="dark"] .sidebar-item--public.sidebar-item--active .sidebar-item__top strong,
+html.dark .sidebar-item--public.sidebar-item--active .sidebar-item__top strong {
+  color: #e0f2fe !important;
+}
+
+html[data-theme="dark"] .sidebar-item--public.sidebar-item--active .sidebar-item__time,
+html.dark .sidebar-item--public.sidebar-item--active .sidebar-item__time {
+  color: #38bdf8 !important;
+}
+
+/* 私密群暗色模式 */
+html[data-theme="dark"] .sidebar-item--private:hover,
+html.dark .sidebar-item--private:hover {
+  background: rgba(99, 102, 241, 0.08) !important;
+}
+
+html[data-theme="dark"] .sidebar-item--private.sidebar-item--active,
+html.dark .sidebar-item--private.sidebar-item--active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(30, 41, 59, 0.85) 100%) !important;
+  border-color: rgba(129, 140, 248, 0.4) !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), 0 0 12px rgba(99, 102, 241, 0.2) !important;
+}
+
+html[data-theme="dark"] .sidebar-item--private.sidebar-item--active::before,
+html.dark .sidebar-item--private.sidebar-item--active::before {
+  background: #818cf8 !important;
+  box-shadow: 0 0 8px rgba(129, 140, 248, 0.6) !important;
+}
+
+html[data-theme="dark"] .sidebar-item--private.sidebar-item--active .sidebar-item__top strong,
+html.dark .sidebar-item--private.sidebar-item--active .sidebar-item__top strong {
+  color: #e0e7ff !important;
+}
+
+html[data-theme="dark"] .sidebar-item--private.sidebar-item--active .sidebar-item__time,
+html.dark .sidebar-item--private.sidebar-item--active .sidebar-item__time {
+  color: #a5b4fc !important;
+}
+
+html[data-theme="dark"] .sidebar-item--general.sidebar-item--active,
+html.dark .sidebar-item--general.sidebar-item--active {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(30, 41, 59, 0.85) 100%) !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), 0 0 12px rgba(245, 158, 11, 0.2) !important;
+}
+
+html[data-theme="dark"] .sidebar-item--general.sidebar-item--active::before,
+html.dark .sidebar-item--general.sidebar-item--active::before {
+  background: #fbbf24 !important;
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.6) !important;
+}
+
+html[data-theme="dark"] .sidebar-item--general.sidebar-item--active .sidebar-item__top strong,
+html.dark .sidebar-item--general.sidebar-item--active .sidebar-item__top strong {
+  color: #fef3c7 !important;
+}
+
+html[data-theme="dark"] .sidebar-item--general.sidebar-item--active .sidebar-item__time,
+html.dark .sidebar-item--general.sidebar-item--active .sidebar-item__time {
+  color: #fcd34d !important;
+}
+
+html[data-theme="dark"] .sidebar-divider,
+html.dark .sidebar-divider {
+  background: var(--border, #283347) !important;
+}
+
+html[data-theme="dark"] .sidebar-hint,
+html.dark .sidebar-hint {
+  color: #475569 !important;
+}
+
+html[data-theme="dark"] .sidebar-group-header__title,
+html.dark .sidebar-group-header__title {
+  color: #64748b !important;
+}
+
+html[data-theme="dark"] .sidebar-group-chevron,
+html.dark .sidebar-group-chevron {
+  color: #475569 !important;
+}
+
+html[data-theme="dark"] .sidebar-group-count,
+html.dark .sidebar-group-count {
+  color: #64748b !important;
+}
+
+html[data-theme="dark"] .sidebar-group-empty,
+html.dark .sidebar-group-empty {
+  color: #475569 !important;
+}
+
+html[data-theme="dark"] .sidebar-muted-indicator,
+html.dark .sidebar-muted-indicator {
+  color: #475569 !important;
+}
+
+html[data-theme="dark"] .sidebar-group-mode-btn,
+html.dark .sidebar-group-mode-btn {
+  background: rgba(0, 201, 158, 0.12) !important;
+  border-color: rgba(0, 201, 158, 0.3) !important;
+  color: #00c99e !important;
+}
+
+html[data-theme="dark"] .sidebar-group-mode-btn:hover,
+html.dark .sidebar-group-mode-btn:hover,
+html[data-theme="dark"] .sidebar-group-mode-btn--active,
+html.dark .sidebar-group-mode-btn--active {
+  background: #008069 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .sidebar-subgroup-header:hover,
+html.dark .sidebar-subgroup-header:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+html[data-theme="dark"] .sidebar-subgroup-header,
+html.dark .sidebar-subgroup-header {
+  background: #1e2433 !important;
+}
+
+html[data-theme="dark"] .sidebar-subgroup-header--static,
+html.dark .sidebar-subgroup-header--static {
+  background: #25231c !important;
+}
+
+html[data-theme="dark"] .contact-group-header,
+html.dark .contact-group-header,
+html[data-theme="dark"] .member-group-header,
+html.dark .member-group-header,
+html[data-theme="dark"] .share-group-header,
+html.dark .share-group-header {
+  background: #1e2433 !important;
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* 暗黑模式：分组标题文本、图标与标签适配 */
+html[data-theme="dark"] .group-name-text,
+html.dark .group-name-text,
+html[data-theme="dark"] .share-group-name,
+html.dark .share-group-name {
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .group-chevron,
+html.dark .group-chevron,
+html[data-theme="dark"] .share-group-chevron,
+html.dark .share-group-chevron,
+html[data-theme="dark"] .contact-group-header__hint,
+html.dark .contact-group-header__hint,
+html[data-theme="dark"] .share-group-hint,
+html.dark .share-group-hint {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .group-count-tag,
+html.dark .group-count-tag,
+html[data-theme="dark"] .group-selected-badge,
+html.dark .group-selected-badge,
+html[data-theme="dark"] .share-group-count,
+html.dark .share-group-count {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .contact-count-label,
+html.dark .contact-count-label,
+html[data-theme="dark"] .member-selected-summary,
+html.dark .member-selected-summary {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .contact-count-label strong,
+html.dark .contact-count-label strong {
+  color: #f1f5f9 !important;
+}
+
+/* 暗黑模式：手风琴外壳与展开后人员列表底色彻底深色化 */
+html[data-theme="dark"] .contact-group-accordion,
+html.dark .contact-group-accordion,
+html[data-theme="dark"] .member-group-accordion,
+html.dark .member-group-accordion,
+html[data-theme="dark"] .share-group-accordion,
+html.dark .share-group-accordion {
+  background: #161b26 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+html[data-theme="dark"] .contact-group-body,
+html.dark .contact-group-body,
+html[data-theme="dark"] .member-group-body,
+html.dark .member-group-body,
+html[data-theme="dark"] .share-group-body,
+html.dark .share-group-body {
+  background: #161b26 !important;
+}
+
+/* 暗黑模式：人员项卡片底色深色化 */
+html[data-theme="dark"] .add-conversation-person,
+html.dark .add-conversation-person {
+  background: #1e2433 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .add-conversation-person:hover:not(:disabled) {
+  background: #283347 !important;
+  border-color: #00c99e !important;
+}
+
+html[data-theme="dark"] .room-dialog__member,
+html.dark .room-dialog__member {
+  background: #1e2433 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .room-dialog__member:hover {
+  background: #283347 !important;
+  border-color: #00c99e !important;
+}
+
+html[data-theme="dark"] .room-dialog__member--selected {
+  background: rgba(0, 201, 158, 0.15) !important;
+  border-color: #00c99e !important;
+}
+
+html[data-theme="dark"] .member-item-info strong,
+html.dark .member-item-info strong {
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .member-item-info small,
+html.dark .member-item-info small {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .share-candidate-card,
+html.dark .share-candidate-card {
+  background: #1e2433 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+html[data-theme="dark"] .share-candidate-card:hover {
+  background: #283347 !important;
+  border-color: #00c99e !important;
+}
+
+html[data-theme="dark"] .share-candidate-card--selected {
+  background: rgba(0, 201, 158, 0.15) !important;
+  border-color: #00c99e !important;
+}
+
+html[data-theme="dark"] .share-candidate-title,
+html.dark .share-candidate-title {
+  color: #f1f5f9 !important;
+}
+
+/* 暗黑模式：搜索框与提示条适配 */
+html[data-theme="dark"] .contact-search-input,
+html.dark .contact-search-input,
+html[data-theme="dark"] .member-search-input,
+html.dark .member-search-input {
+  background: #111622 !important;
+  border-color: var(--border, #283347) !important;
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .contact-search-input:focus,
+html.dark .contact-search-input:focus,
+html[data-theme="dark"] .member-search-input:focus,
+html.dark .member-search-input:focus {
+  background: #161b26 !important;
+  border-color: #00c99e !important;
+}
+
+html[data-theme="dark"] .add-conversation-scope-hint,
+html.dark .add-conversation-scope-hint {
+  background: #111622 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .btn-group-select-all,
+html.dark .btn-group-select-all {
+  background: #1e2433 !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .btn-group-select-all:hover,
+html.dark .btn-group-select-all:hover {
+  border-color: #00c99e !important;
+  color: #00c99e !important;
+  background: rgba(0, 201, 158, 0.12) !important;
+}
+
+html[data-theme="dark"] .contact-group-header:hover,
+html.dark .contact-group-header:hover,
+html[data-theme="dark"] .member-group-header:hover,
+html.dark .member-group-header:hover,
+html[data-theme="dark"] .share-group-header:hover,
+html.dark .share-group-header:hover {
+  background: #262e40 !important;
+}
+
+html[data-theme="dark"] .sidebar-subgroup-title,
+html.dark .sidebar-subgroup-title {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .sidebar-subgroup-count,
+html.dark .sidebar-subgroup-count {
+  color: #64748b !important;
+}
+
+html[data-theme="dark"] .sidebar-subgroup-chevron,
+html.dark .sidebar-subgroup-chevron {
+  color: #64748b !important;
+}
+
+/* 顶栏动作按钮 */
+html[data-theme="dark"] .header-action,
+html.dark .header-action {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .header-action:hover,
+html.dark .header-action:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: #f1f5f9 !important;
+}
+
+/* 聊天主区域背景 */
+html[data-theme="dark"] .chat-main,
+html.dark .chat-main {
+  background: #0b0f19 !important;
+}
+
+/* 聊天 Header */
+html[data-theme="dark"] .chat-header,
+html.dark .chat-header {
+  background: #161b26 !important;
+  border-bottom-color: var(--border, #283347) !important;
+}
+
+html[data-theme="dark"] .chat-header h2,
+html.dark .chat-header h2 {
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .chat-header__back,
+html.dark .chat-header__back {
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .chat-header__back:active,
+html.dark .chat-header__back:active {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+html[data-theme="dark"] .chat-header__identity span,
+html.dark .chat-header__identity span {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .chat-header__button,
+html.dark .chat-header__button {
+  background: #1e2433 !important;
+  border-color: var(--border, #283347) !important;
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .chat-header__button:hover,
+html.dark .chat-header__button:hover {
+  background: #262e40 !important;
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .chat-header__button--active,
+html.dark .chat-header__button--active {
+  background: rgba(0, 168, 132, 0.15) !important;
+  border-color: rgba(0, 168, 132, 0.4) !important;
+  color: #00c99e !important;
+}
+
+/* 消息列表区域 */
+html[data-theme="dark"] .chat-messages,
+html.dark .chat-messages {
+  background: transparent !important;
+}
+
+/* 消息气泡 - 他人消息（支持群聊按发送者分配暗调底色与发光边框）*/
+html[data-theme="dark"] .message-bubble,
+html.dark .message-bubble {
+  background: var(--sender-bubble-bg-dark, #1e2433) !important;
+  border: 1px solid var(--sender-bubble-border-dark, rgba(255, 255, 255, 0.08)) !important;
+  box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.3) !important;
+}
+
+html[data-theme="dark"] .message-bubble p,
+html.dark .message-bubble p {
+  color: #e2e8f0 !important;
+}
+
+/* 消息气泡 - 自己消息（绿泡→暗绿）*/
+html[data-theme="dark"] .message-row--own .message-bubble,
+html.dark .message-row--own .message-bubble {
+  background: #054d3b !important;
+  border-color: rgba(45, 156, 151, 0.3) !important;
+}
+
+html[data-theme="dark"] .message-row--own .message-bubble p,
+html.dark .message-row--own .message-bubble p {
+  color: #d1fae5 !important;
+}
+
+/* @提及消息 */
+html[data-theme="dark"] .message-row--mentioned .message-bubble,
+html.dark .message-row--mentioned .message-bubble {
+  background: #1e1a0a !important;
+  border-left-color: #f59e0b !important;
+}
+
+/* 消息时间戳 */
+html[data-theme="dark"] .message-time,
+html.dark .message-time {
+  color: #64748b !important;
+}
+
+html[data-theme="dark"] .message-row--own .message-time,
+html.dark .message-row--own .message-time {
+  color: #4d7a6a !important;
+}
+
+/* 消息发送者名 */
+html[data-theme="dark"] .message-sender-name,
+html.dark .message-sender-name {
+  color: var(--sender-name-color-dark, #38bdf8) !important;
+}
+
+html[data-theme="dark"] .message-row--own .message-sender-name,
+html.dark .message-row--own .message-sender-name {
+  color: #5eead4 !important;
+}
+
+/* 未读消息分割线 */
+html[data-theme="dark"] .unread-messages-divider__line,
+html.dark .unread-messages-divider__line {
+  background: rgba(245, 158, 11, 0.3) !important;
+}
+
+html[data-theme="dark"] .unread-messages-divider__badge,
+html.dark .unread-messages-divider__badge {
+  background: rgba(245, 158, 11, 0.12) !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+}
+
+html[data-theme="dark"] .unread-messages-divider__text,
+html.dark .unread-messages-divider__text {
+  color: #fbbf24 !important;
+}
+
+/* 聊天日期分割线与悬浮吸顶标签 */
+html[data-theme="dark"] .chat-date-divider__badge,
+html.dark .chat-date-divider__badge {
+  background: rgba(30, 41, 59, 0.7) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #94a3b8 !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+html[data-theme="dark"] .chat-floating-date,
+html.dark .chat-floating-date {
+  background: rgba(30, 41, 59, 0.8) !important;
+  color: #f1f5f9 !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* 消息提示（无会话选中时） */
+html[data-theme="dark"] .messages-hint,
+html.dark .messages-hint {
+  color: #475569 !important;
+}
+
+/* 撤回提示 */
+html[data-theme="dark"] .message-recalled-tip,
+html.dark .message-recalled-tip {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #64748b !important;
+}
+
+/* 加载更多按钮 */
+html[data-theme="dark"] .load-more-btn,
+html.dark .load-more-btn {
+  background: #1e2433 !important;
+  border-color: var(--border, #283347) !important;
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .load-more-btn:hover,
+html.dark .load-more-btn:hover {
+  background: #262e40 !important;
+}
+
+/* 输入框 Composer */
+html[data-theme="dark"] .chat-composer,
+html.dark .chat-composer {
+  background: #161b26 !important;
+  border-top-color: var(--border, #283347) !important;
+}
+
+/* 回复/编辑工具栏 */
+html[data-theme="dark"] .composer-reply-bar,
+html.dark .composer-reply-bar {
+  background: rgba(0, 168, 132, 0.1) !important;
+  border-left-color: #00a884 !important;
+  color: #00c99e !important;
+}
+
+html[data-theme="dark"] .composer-reply-bar__preview,
+html.dark .composer-reply-bar__preview {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .composer-editing-bar,
+html.dark .composer-editing-bar {
+  background: rgba(56, 189, 248, 0.08) !important;
+  border-left-color: #38bdf8 !important;
+  color: #38bdf8 !important;
+}
+
+html[data-theme="dark"] .composer-editing-bar__preview,
+html.dark .composer-editing-bar__preview {
+  color: #94a3b8 !important;
+}
+
+/* 打字指示器 */
+html[data-theme="dark"] .chat-typing-indicator,
+html.dark .chat-typing-indicator {
+  background: rgba(22, 27, 38, 0.95) !important;
+  color: #94a3b8 !important;
+}
+
+/* 批量操作栏 */
+html[data-theme="dark"] .batch-action-bar,
+html.dark .batch-action-bar {
+  background: rgba(22, 27, 38, 0.97) !important;
+  border-color: var(--border, #283347) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+html[data-theme="dark"] .batch-action-count,
+html.dark .batch-action-count {
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .batch-action-btn,
+html.dark .batch-action-btn {
+  background: #1e2433 !important;
+  border-color: var(--border, #283347) !important;
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .batch-action-btn:hover:not(:disabled),
+html.dark .batch-action-btn:hover:not(:disabled) {
+  background: #262e40 !important;
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .batch-action-btn--danger,
+html.dark .batch-action-btn--danger {
+  background: rgba(239, 68, 68, 0.15) !important;
+  border-color: rgba(239, 68, 68, 0.35) !important;
+  color: #f87171 !important;
+}
+
+/* 拖拽上传遮罩 */
+html[data-theme="dark"] .chat-drag-overlay,
+html.dark .chat-drag-overlay {
+  background: rgba(11, 15, 25, 0.85) !important;
+}
+
+html[data-theme="dark"] .chat-drag-box,
+html.dark .chat-drag-box {
+  background: rgba(22, 27, 38, 0.97) !important;
+}
+
+html[data-theme="dark"] .chat-drag-box h3,
+html.dark .chat-drag-box h3 {
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .chat-drag-box p,
+html.dark .chat-drag-box p {
+  color: #94a3b8 !important;
+}
+
+/* 云盘拖拽上传半透明遮罩 */
+html[data-theme="dark"] .drag-overlay,
+html.dark .drag-overlay {
+  background: rgba(11, 15, 25, 0.85) !important;
+}
+
+html[data-theme="dark"] .drag-dropzone-box,
+html.dark .drag-dropzone-box {
+  background: rgba(22, 27, 38, 0.97) !important;
+  border-color: #008069 !important;
+}
+
+html[data-theme="dark"] .drag-dropzone-title,
+html.dark .drag-dropzone-title {
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .drag-dropzone-subtitle,
+html.dark .drag-dropzone-subtitle {
+  color: #94a3b8 !important;
+}
+
+/* 打包下载清单确认弹窗 */
+html[data-theme="dark"] .batch-confirm-modal-card,
+html.dark .batch-confirm-modal-card {
+  background: rgba(22, 27, 38, 0.98) !important;
+  border-color: var(--border, #283347) !important;
+}
+
+html[data-theme="dark"] .batch-confirm-header,
+html.dark .batch-confirm-header,
+html[data-theme="dark"] .batch-confirm-filename-row,
+html.dark .batch-confirm-filename-row,
+html[data-theme="dark"] .batch-confirm-actions,
+html.dark .batch-confirm-actions {
+  background: rgba(16, 21, 30, 0.95) !important;
+  border-color: var(--border, #283347) !important;
+}
+
+html[data-theme="dark"] .batch-confirm-item,
+html.dark .batch-confirm-item {
+  background: rgba(28, 35, 48, 0.95) !important;
+  border-color: var(--border, #283347) !important;
+}
+
+html[data-theme="dark"] .batch-confirm-item .item-path,
+html.dark .batch-confirm-item .item-path {
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .summary-stat-pill,
+html.dark .summary-stat-pill {
+  background: rgba(28, 35, 48, 0.95) !important;
+  border-color: var(--border, #283347) !important;
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .btn-cancel,
+html.dark .btn-cancel {
+  background: rgba(28, 35, 48, 0.95) !important;
+  border-color: var(--border, #283347) !important;
+  color: #94a3b8 !important;
+}
+
+/* 滚动到底部按钮 */
+html[data-theme="dark"] .chat-scroll-bottom-btn,
+html.dark .chat-scroll-bottom-btn {
+  background: rgba(22, 27, 38, 0.97) !important;
+  border-color: var(--border, #283347) !important;
+  color: #94a3b8 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+html[data-theme="dark"] .chat-scroll-bottom-btn:hover,
+html.dark .chat-scroll-bottom-btn:hover {
+  background: #1e2433 !important;
+  color: #00c99e !important;
+}
+
+/* mention 选择器 */
+html[data-theme="dark"] .mention-picker,
+html.dark .mention-picker {
+  background: var(--surface-floating) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+html[data-theme="dark"] .mention-item:hover,
+html.dark .mention-item:hover,
+html[data-theme="dark"] .mention-item.active,
+html.dark .mention-item.active {
+  background: var(--primary-light) !important;
+  color: var(--primary) !important;
+}
+
+/* 消息右键上下文菜单 */
+html[data-theme="dark"] .message-context-menu,
+html.dark .message-context-menu {
+  background: #1e2433 !important;
+  border-color: var(--border, #283347) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6) !important;
+}
+
+html[data-theme="dark"] .message-context-menu__item,
+html.dark .message-context-menu__item {
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .message-context-menu__item:hover,
+html.dark .message-context-menu__item:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+html[data-theme="dark"] .message-context-menu__item--reply:hover,
+html.dark .message-context-menu__item--reply:hover {
+  background: rgba(0, 168, 132, 0.15) !important;
+  color: #00c99e !important;
+}
+
+html[data-theme="dark"] .message-context-menu__divider,
+html.dark .message-context-menu__divider {
+  background: var(--border, #283347) !important;
+}
+
+/* 表情选择器 (Emoji Picker) */
+html[data-theme="dark"] .emoji-picker,
+html.dark .emoji-picker {
+  background: #1e2433 !important;
+  border-color: var(--border, #283347) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+html[data-theme="dark"] .emoji-picker__header,
+html.dark .emoji-picker__header,
+html[data-theme="dark"] .emoji-category-tabs,
+html.dark .emoji-category-tabs {
+  background: #161b26 !important;
+  border-color: var(--border, #283347) !important;
+}
+
+html[data-theme="dark"] .emoji-search-input,
+html.dark .emoji-search-input {
+  background: #111622 !important;
+  border-color: var(--border, #283347) !important;
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .emoji-item:hover,
+html.dark .emoji-item:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 快捷回复面板 (Quick Reply Picker) */
+html[data-theme="dark"] .quick-reply-picker,
+html.dark .quick-reply-picker {
+  background: #1e2433 !important;
+  border-color: var(--border, #283347) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+html[data-theme="dark"] .quick-reply-picker__header,
+html.dark .quick-reply-picker__header {
+  background: #161b26 !important;
+  border-color: var(--border, #283347) !important;
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .quick-reply-item,
+html.dark .quick-reply-item {
+  color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .quick-reply-item:hover,
+html.dark .quick-reply-item:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #f1f5f9 !important;
+}
+
+/* 格式化工具栏 */
+html[data-theme="dark"] .formatting-toolbar,
+html.dark .formatting-toolbar {
+  background: #1e2433 !important;
+  border-color: var(--border, #283347) !important;
+}
+
+html[data-theme="dark"] .format-btn,
+html.dark .format-btn {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .format-btn:hover,
+html.dark .format-btn:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #f1f5f9 !important;
+}
+
+/* 移动端导航抽屉 */
+html[data-theme="dark"] .mobile-navigation-drawer,
+html.dark .mobile-navigation-drawer {
+  background: #111622 !important;
+}
+
+html[data-theme="dark"] .mobile-navigation-drawer__header,
+html.dark .mobile-navigation-drawer__header {
+  border-bottom-color: var(--border, #283347) !important;
+}
+
+html[data-theme="dark"] .mobile-navigation-drawer__user-name,
+html.dark .mobile-navigation-drawer__user-name {
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .mobile-navigation-drawer__actions button,
+html.dark .mobile-navigation-drawer__actions button,
+html[data-theme="dark"] .mobile-navigation-drawer__actions a,
+html.dark .mobile-navigation-drawer__actions a {
+  color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .mobile-navigation-drawer__actions button:hover,
+html.dark .mobile-navigation-drawer__actions button:hover,
+html[data-theme="dark"] .mobile-navigation-drawer__actions a:hover,
+html.dark .mobile-navigation-drawer__actions a:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* 对话创建/选择弹窗 (AddConversationDialog) */
+html[data-theme="dark"] .add-conversation-dialog,
+html.dark .add-conversation-dialog {
+  background: #161b26 !important;
+  border-color: var(--border, #283347) !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7) !important;
+}
+
+html[data-theme="dark"] .add-conversation-dialog__header h2,
+html.dark .add-conversation-dialog__header h2 {
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .add-conversation-dialog__header p,
+html.dark .add-conversation-dialog__header p {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .add-conversation-choice,
+html.dark .add-conversation-choice,
+html[data-theme="dark"] .add-conversation-person,
+html.dark .add-conversation-person {
+  background: #1e2433 !important;
+  border-color: var(--border, #283347) !important;
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .add-conversation-choice:hover,
+html.dark .add-conversation-choice:hover,
+html[data-theme="dark"] .add-conversation-person:hover,
+html.dark .add-conversation-person:hover {
+  background: #262e40 !important;
+}
+
+/* 群组创建/设置弹窗 (CreateGroupDialog & GroupSettingsDialog) */
+html[data-theme="dark"] .room-dialog,
+html.dark .room-dialog {
+  background: #161b26 !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7) !important;
+}
+
+html[data-theme="dark"] .room-dialog h2,
+html.dark .room-dialog h2 {
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .room-dialog__input,
+html.dark .room-dialog__input {
+  background: #111622 !important;
+  border-color: var(--border, #283347) !important;
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .room-dialog__type-switch,
+html.dark .room-dialog__type-switch {
+  background: #111622 !important;
+  border-color: var(--border, #283347) !important;
+}
+
+html[data-theme="dark"] .room-dialog__type-option--active,
+html.dark .room-dialog__type-option--active {
+  background: #1e2433 !important;
+  color: #00c99e !important;
+}
+
+html[data-theme="dark"] .room-dialog__member,
+html.dark .room-dialog__member {
+  background: #1e2433 !important;
+  border-color: var(--border, #283347) !important;
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .room-dialog__secondary,
+html.dark .room-dialog__secondary {
+  background: #1e2433 !important;
+  border-color: var(--border, #283347) !important;
+  color: #94a3b8 !important;
+}
+
+/* 导出对话弹窗 (ExportChatDialog) */
+html[data-theme="dark"] .export-dialog,
+html.dark .export-dialog {
+  background: #161b26 !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7) !important;
+}
+
+html[data-theme="dark"] .export-dialog__header h2,
+html.dark .export-dialog__header h2 {
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .export-format-card,
+html.dark .export-format-card {
+  background: #1e2433 !important;
+  border-color: var(--border, #283347) !important;
+  color: #e2e8f0 !important;
+}
+
+/* 公开群发现与加入弹窗 (PublicGroupDiscovery & PublicGroupJoinDialog) */
+html[data-theme="dark"] .public-group-discovery__toggle,
+html.dark .public-group-discovery__toggle {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .public-group-discovery__toggle:hover,
+html.dark .public-group-discovery__toggle:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+html[data-theme="dark"] .public-group-discovery__item,
+html.dark .public-group-discovery__item {
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .public-group-discovery__item:hover,
+html.dark .public-group-discovery__item:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+html[data-theme="dark"] .public-group-dialog,
+html.dark .public-group-dialog {
+  background: #161b26 !important;
+}
+
+html[data-theme="dark"] .public-group-dialog h2,
+html.dark .public-group-dialog h2 {
+  color: #f1f5f9 !important;
+}
+
+/* 成员列表面板 (MemberPanel) */
+html[data-theme="dark"] .room-management-sidebar,
+html.dark .room-management-sidebar {
+  background: #111622 !important;
+  border-color: var(--border, #283347) !important;
+}
+
+html[data-theme="dark"] .chat-member-panel,
+html.dark .chat-member-panel {
+  background: transparent !important;
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .chat-member-panel__header h1,
+html.dark .chat-member-panel__header h1 {
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .member-chip,
+html.dark .member-chip {
+  background: #1e2433 !important;
+  border-color: var(--border, #283347) !important;
+}
+
+html[data-theme="dark"] .member-chip:hover,
+html.dark .member-chip:hover {
+  background: #242c3d !important;
+  border-color: #3b475c !important;
+}
+
+html[data-theme="dark"] .member-chip__text strong,
+html.dark .member-chip__text strong {
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .chat-member-panel__close,
+html.dark .chat-member-panel__close {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .chat-member-panel__close:hover,
+html.dark .chat-member-panel__close:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #f1f5f9 !important;
+}
+
+/* 网盘文件选择弹窗 (DriveFilePickerModal) */
+html[data-theme="dark"] .drive-file-picker-card,
+html.dark .drive-file-picker-card {
+  background: #161b26 !important;
+  border-color: var(--border, #283347) !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7) !important;
+}
+
+html[data-theme="dark"] .picker-header,
+html.dark .picker-header,
+html[data-theme="dark"] .picker-breadcrumbs,
+html.dark .picker-breadcrumbs,
+html[data-theme="dark"] .picker-footer,
+html.dark .picker-footer {
+  background: #111622 !important;
+  border-color: var(--border, #283347) !important;
+}
+
+html[data-theme="dark"] .picker-title,
+html.dark .picker-title {
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .picker-body,
+html.dark .picker-body {
+  background: #161b26 !important;
+}
+
+html[data-theme="dark"] .picker-file-row:hover,
+html.dark .picker-file-row:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+html[data-theme="dark"] .picker-file-name,
+html.dark .picker-file-name {
+  color: #e2e8f0 !important;
+}
+
+
+
+/* ==========================================================================
+   网盘模块 (Drive Module)
+   ========================================================================== */
+
+html[data-theme="dark"] .drive-manager-container,
+html.dark .drive-manager-container {
+  background: #0b0f19;
+  color: var(--text);
+}
+
+/* 左侧栏 */
+html[data-theme="dark"] .drive-sidebar,
+html.dark .drive-sidebar {
+  background: #111622 !important;
+  border-right-color: var(--border, #283347) !important;
+  border-bottom-color: var(--border, #283347) !important;
+}
+
+html[data-theme="dark"] .sidebar-new-folder-btn,
+html.dark .sidebar-new-folder-btn {
+  background: #1e2433 !important;
+  border-color: var(--border, #283347) !important;
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .sidebar-new-folder-btn:hover,
+html.dark .sidebar-new-folder-btn:hover {
+  background: #262e40 !important;
+}
+
+html[data-theme="dark"] .nav-menu-item,
+html.dark .nav-menu-item {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .nav-menu-item:hover,
+html.dark .nav-menu-item:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .nav-menu-item.active,
+html.dark .nav-menu-item.active {
+  background: rgba(0, 168, 132, 0.16) !important;
+  color: #00c99e !important;
+}
+
+html[data-theme="dark"] .sidebar-quota-card,
+html.dark .sidebar-quota-card {
+  background: #161b26 !important;
+  border-color: var(--border, #283347) !important;
+}
+
+html[data-theme="dark"] .quota-title,
+html.dark .quota-title {
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="dark"] .quota-progress-bar,
+html.dark .quota-progress-bar {
+  background: #1e2433 !important;
+}
+
+html[data-theme="dark"] .quota-detail,
+html.dark .quota-detail {
+  color: #94a3b8 !important;
+}
+
+/* 顶部操作工具栏 */
+html[data-theme="dark"] .drive-toolbar,
+html.dark .drive-toolbar {
+  background: #161b26 !important;
+  border-bottom-color: var(--border, #283347) !important;
+}
+
+html[data-theme="dark"] .toolbar-title,
+html.dark .toolbar-title {
+  color: var(--text) !important;
+}
+
+html[data-theme="dark"] .toolbar-subtitle,
+html.dark .toolbar-subtitle {
+  color: var(--text-secondary) !important;
+}
+
+html[data-theme="dark"] .breadcrumb-item,
+html.dark .breadcrumb-item {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .breadcrumb-item:hover,
+html.dark .breadcrumb-item:hover {
+  background: #1e2433 !important;
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .breadcrumb-item.active,
+html.dark .breadcrumb-item.active {
+  color: #00c99e !important;
+}
+
+html[data-theme="dark"] .view-mode-toggle,
+html.dark .view-mode-toggle {
+  background: #111622 !important;
+  border-color: var(--border, #283347) !important;
+}
+
+html[data-theme="dark"] .toggle-btn.active,
+html.dark .toggle-btn.active {
+  background: #1e2433 !important;
+  color: var(--primary) !important;
+}
+
+html[data-theme="dark"] .file-grid-card,
+html.dark .file-grid-card {
+  background: var(--surface-1);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .file-grid-card:hover,
+html.dark .file-grid-card:hover {
+  background: var(--surface-2);
+  border-color: var(--primary);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+html[data-theme="dark"] .file-card-name,
+html.dark .file-card-name {
+  color: var(--text);
+}
+
+html[data-theme="dark"] .file-card-meta,
+html.dark .file-card-meta {
+  color: var(--text-secondary);
+}
+
+html[data-theme="dark"] .card-act-btn,
+html.dark .card-act-btn {
+  background: var(--surface-2);
+  border-color: var(--border);
+  color: var(--text-secondary);
+}
+
+html[data-theme="dark"] .card-act-btn:hover,
+html.dark .card-act-btn:hover {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .drive-table,
+html.dark .drive-table {
+  background: var(--surface-1);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .drive-table th,
+html.dark .drive-table th {
+  background: var(--surface-0);
+  border-bottom-color: var(--border);
+  color: var(--text-secondary);
+}
+
+html[data-theme="dark"] .drive-table-row,
+html.dark .drive-table-row {
+  border-bottom-color: var(--border-subtle);
+}
+
+html[data-theme="dark"] .drive-table-row:hover,
+html.dark .drive-table-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+html[data-theme="dark"] .file-list-name,
+html.dark .file-list-name {
+  color: var(--text);
+}
+
+html[data-theme="dark"] .badge-perm,
+html.dark .badge-perm {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+}
+
+html[data-theme="dark"] .badge-lock,
+html.dark .badge-lock {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+}
+
+html[data-theme="dark"] .badge-public,
+html.dark .badge-public {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+html[data-theme="dark"] .action-btn-secondary,
+html.dark .action-btn-secondary {
+  background: var(--surface-2);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .action-btn-secondary:hover,
+html.dark .action-btn-secondary:hover {
+  background: var(--surface-3);
+}
+
+html[data-theme="dark"] .action-btn-danger,
+html.dark .action-btn-danger {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #f87171;
+}
+
+html[data-theme="dark"] .action-btn-danger:hover:not(:disabled),
+html.dark .action-btn-danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.25);
+}
+
+/* 弹窗与抽屉 */
+html[data-theme="dark"] .drive-share-dialog-card,
+html.dark .drive-share-dialog-card,
+html[data-theme="dark"] .share-dialog-card,
+html.dark .share-dialog-card,
+html[data-theme="dark"] .drive-upload-modal,
+html.dark .drive-upload-modal,
+html[data-theme="dark"] .preview-modal,
+html.dark .preview-modal {
+  background: var(--surface-1);
+  border-color: var(--border);
+  color: var(--text);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+}
+
+html[data-theme="dark"] .preview-header,
+html.dark .preview-header,
+html[data-theme="dark"] .share-dialog-header,
+html.dark .share-dialog-header,
+html[data-theme="dark"] .dialog-header,
+html.dark .dialog-header {
+  background: var(--surface-0);
+  border-bottom-color: var(--border);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .share-tabs-bar,
+html.dark .share-tabs-bar {
+  background: var(--surface-1);
+  border-bottom-color: var(--border);
+}
+
+html[data-theme="dark"] .share-tab-btn,
+html.dark .share-tab-btn {
+  color: var(--text-secondary);
+}
+
+html[data-theme="dark"] .share-tab-btn.active,
+html.dark .share-tab-btn.active {
+  color: #10b981;
+  border-bottom-color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+}
+
+html[data-theme="dark"] .member-add-box,
+html.dark .member-add-box,
+html[data-theme="dark"] .member-share-item,
+html.dark .member-share-item,
+html[data-theme="dark"] .member-shares-empty,
+html.dark .member-shares-empty {
+  background: var(--surface-0);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .member-name,
+html.dark .member-name,
+html[data-theme="dark"] .shared-owner-name,
+html.dark .shared-owner-name {
+  color: var(--text);
+}
+
+html[data-theme="dark"] .badge-admin,
+html.dark .badge-admin {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+}
+
+html[data-theme="dark"] .badge-write,
+html.dark .badge-write {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+html[data-theme="dark"] .badge-read,
+html.dark .badge-read {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+}
+
+html[data-theme="dark"] .btn-revoke-share:hover,
+html.dark .btn-revoke-share:hover {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+html[data-theme="dark"] .preview-content,
+html.dark .preview-content,
+html[data-theme="dark"] .preview-body,
+html.dark .preview-body {
+  background: #090d15;
+}
+
+html[data-theme="dark"] .preview-audio-container,
+html.dark .preview-audio-container,
+html[data-theme="dark"] .preview-fallback-container,
+html.dark .preview-fallback-container,
+html[data-theme="dark"] .preview-csv-container,
+html.dark .preview-csv-container,
+html[data-theme="dark"] .preview-text-container,
+html.dark .preview-text-container {
+  background: var(--surface-1);
+}
+
+html[data-theme="dark"] .audio-card,
+html.dark .audio-card,
+html[data-theme="dark"] .fallback-card,
+html.dark .fallback-card {
+  background: var(--surface-0);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .group-call-message-card,
+html.dark .group-call-message-card {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.28);
+}
+
+html[data-theme="dark"] .group-call-card-title,
+html.dark .group-call-card-title {
+  color: #f1f5f9;
+}
+
+html[data-theme="dark"] .group-call-card-desc,
+html.dark .group-call-card-desc {
+  color: #94a3b8;
+}
+
+html[data-theme="dark"] .audio-card-name,
+html.dark .audio-card-name,
+html[data-theme="dark"] .fallback-title,
+html.dark .fallback-title {
+  color: var(--text);
+}
+
+html[data-theme="dark"] .markdown-preview-wrap,
+html.dark .markdown-preview-wrap {
+  background: var(--surface-1);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .csv-table th,
+html.dark .csv-table th {
+  background: var(--surface-0);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .csv-table td,
+html.dark .csv-table td {
+  border-color: var(--border);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .csv-index-col,
+html.dark .csv-index-col {
+  background: var(--surface-0);
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   设置页与管理后台 (Settings & Admin)
+   ========================================================================== */
+
+html[data-theme="dark"] .settings-page,
+html.dark .settings-page {
+  color: var(--text);
+}
+
+html[data-theme="dark"] .settings-card,
+html.dark .settings-card,
+html[data-theme="dark"] .admin-card,
+html.dark .admin-card {
+  background: var(--surface-1);
+  border-color: var(--border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+html[data-theme="dark"] .admin-card__title,
+html.dark .admin-card__title {
+  color: var(--text);
+}
+
+html[data-theme="dark"] .admin-card__desc,
+html.dark .admin-card__desc,
+html[data-theme="dark"] .admin-form-hint,
+html.dark .admin-form-hint {
+  color: var(--text-secondary);
+}
+
+html[data-theme="dark"] .admin-form-label,
+html.dark .admin-form-label {
+  color: var(--text);
+}
+
+html[data-theme="dark"] .admin-radio-label,
+html.dark .admin-radio-label {
+  color: var(--text);
+}
+
+html[data-theme="dark"] .admin-sidebar,
+html.dark .admin-sidebar,
+html[data-theme="dark"] .admin-topbar,
+html.dark .admin-topbar {
+  background: var(--surface-1);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .admin-workspace,
+html.dark .admin-workspace {
+  background: #0b0f19;
+}
+
+html[data-theme="dark"] .badge-db,
+html.dark .badge-db {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+}
+
+html[data-theme="dark"] .badge-env,
+html.dark .badge-env {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+}
+
+html[data-theme="dark"] .badge-native,
+html.dark .badge-native {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+/* 滚动条暗色优化 */
+html[data-theme="dark"] ::-webkit-scrollbar-track,
+html.dark ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb,
+html.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover,
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ==========================================================================
+   外链分享页 (Public Share Page)
+   ========================================================================== */
+html[data-theme="dark"] .public-share-layout,
+html.dark .public-share-layout {
+  background: #0b0f19;
+  color: var(--text);
+}
+
+html[data-theme="dark"] .public-share-container,
+html.dark .public-share-container {
+  background: var(--surface-1);
+  border-color: var(--border);
+  color: var(--text);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+}
+
+html[data-theme="dark"] .sharer-profile-row,
+html.dark .sharer-profile-row,
+html[data-theme="dark"] .file-properties-grid,
+html.dark .file-properties-grid,
+html[data-theme="dark"] .folder-breadcrumbs,
+html.dark .folder-breadcrumbs {
+  background: var(--surface-0);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .shared-files-table th,
+html.dark .shared-files-table th {
+  background: var(--surface-0);
+  border-bottom-color: var(--border);
+}
+
+html[data-theme="dark"] .shared-files-table td,
+html.dark .shared-files-table td {
+  border-bottom-color: var(--border);
+}
+
+html[data-theme="dark"] .table-row:hover,
+html.dark .table-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+html[data-theme="dark"] .meta-tag,
+html.dark .meta-tag {
+  background: var(--surface-0);
+  border-color: var(--border);
+}
+
+/* ==========================================================================
+   聊天中的网盘文件选择器 (Drive File Picker Modal)
+   ========================================================================== */
+html[data-theme="dark"] .picker-card,
+html.dark .picker-card {
+  background: var(--surface-1);
+  border-color: var(--border);
+  color: var(--text);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+}
+
+html[data-theme="dark"] .picker-header,
+html.dark .picker-header,
+html[data-theme="dark"] .picker-nav-bar,
+html.dark .picker-nav-bar,
+html[data-theme="dark"] .picker-footer,
+html.dark .picker-footer {
+  background: var(--surface-0);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .picker-body,
+html.dark .picker-body {
+  background: var(--surface-1);
+}
+
+html[data-theme="dark"] .picker-file-item,
+html.dark .picker-file-item {
+  background: var(--surface-0);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .picker-file-item:hover,
+html.dark .picker-file-item:hover {
+  background: var(--surface-2);
+  border-color: var(--border-hover);
+}
+
+html[data-theme="dark"] .picker-file-item.is-selected,
+html.dark .picker-file-item.is-selected {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: #10b981;
+}
+
+html[data-theme="dark"] .picker-search-input,
+html.dark .picker-search-input {
+  background: var(--surface-1);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .receipt-icon--read,
+html.dark .receipt-icon--read {
+  color: #38bdf8;
+}
+
+html[data-theme="dark"] .receipt-icon--sent,
+html.dark .receipt-icon--sent {
+  color: #94a3b8;
+  opacity: 0.75;
+}
+
+html[data-theme="dark"] .receipt-icon--pending,
+html.dark .receipt-icon--pending {
+  color: #94a3b8;
+}
+
+/* ==========================================================================
+   网盘目录选择器 (Drive Folder Selector Modal)
+   ========================================================================== */
+html[data-theme="dark"] .folder-picker-card,
+html.dark .folder-picker-card {
+  background: var(--surface-1);
+  border-color: var(--border);
+  color: var(--text);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+}
+
+html[data-theme="dark"] .folder-picker-header,
+html.dark .folder-picker-header,
+html[data-theme="dark"] .folder-picker-nav,
+html.dark .folder-picker-nav,
+html[data-theme="dark"] .folder-picker-footer,
+html.dark .folder-picker-footer {
+  background: var(--surface-0);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .folder-picker-body,
+html.dark .folder-picker-body {
+  background: var(--surface-1);
+}
+
+html[data-theme="dark"] .folder-item,
+html.dark .folder-item {
+  background: var(--surface-0);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .folder-item:hover,
+html.dark .folder-item:hover {
+  background: var(--surface-2);
+  border-color: #10b981;
+}
+
+html[data-theme="dark"] .new-folder-form,
+html.dark .new-folder-form {
+  background: var(--surface-0);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .new-folder-input,
+html.dark .new-folder-input {
+  background: var(--surface-1);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+/* ==========================================================================
+   网盘共享协作卡片 (Drive Share Card)
+   ========================================================================== */
+html[data-theme="dark"] .drive-share-card,
+html.dark .drive-share-card {
+  background: var(--surface-1);
+  border-color: #0284c7;
+  color: var(--text);
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.2);
+}
+
+html[data-theme="dark"] .card-action-btn.secondary,
+html.dark .card-action-btn.secondary {
+  background: var(--surface-0);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .card-action-btn.secondary:hover,
+html.dark .card-action-btn.secondary:hover {
+  background: var(--surface-2);
+}
+
+/* ==========================================================================
+   消息搜索栏 (Message Search Bar)
+   ========================================================================== */
+html[data-theme="dark"] .message-search-bar,
+html.dark .message-search-bar {
+  background: var(--surface-1);
+  border-color: var(--border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+html[data-theme="dark"] .search-input-wrapper,
+html.dark .search-input-wrapper {
+  background: var(--surface-0);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .search-input,
+html.dark .search-input {
+  color: var(--text);
+}
+
+html[data-theme="dark"] .search-nav-btn,
+html.dark .search-nav-btn {
+  background: var(--surface-0);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .search-nav-btn:hover:not(:disabled),
+html.dark .search-nav-btn:hover:not(:disabled) {
+  background: var(--surface-2);
+}
+
+/* ==========================================================================
+   置顶消息横幅 (Pinned Message Banner)
+   ========================================================================== */
+html[data-theme="dark"] .pinned-banner,
+html.dark .pinned-banner {
+  background: var(--surface-1);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .pinned-snippet,
+html.dark .pinned-snippet {
+  color: var(--text);
+}
+
+/* ==========================================================================
+   消息表情表态 (Message Reactions)
+   ========================================================================== */
+html[data-theme="dark"] .reaction-badge,
+html.dark .reaction-badge {
+  background: var(--surface-0);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .reaction-badge:hover,
+html.dark .reaction-badge:hover {
+  background: var(--surface-2);
+  border-color: #10b981;
+}
+
+html[data-theme="dark"] .reaction-badge.is-reacted,
+html.dark .reaction-badge.is-reacted {
+  background: rgba(16, 185, 129, 0.18);
+  border-color: #10b981;
+  color: #10b981;
+}
+
+/* ==========================================================================
+   侧边栏会话置顶 (Pinned Conversations)
+   ========================================================================== */
+.sidebar-pinned-icon {
+  color: #008069;
+  flex-shrink: 0;
+  margin-right: 4px;
+}
+
+html[data-theme="dark"] .sidebar-pinned-icon,
+html.dark .sidebar-pinned-icon {
+  color: #10b981;
+}
+
+.sidebar-item__title-wrap {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  min-width: 0;
+  flex: 1;
+}
+
+html[data-theme="dark"] .message-context-menu,
+html.dark .message-context-menu {
+  background: var(--surface-1);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .quick-emoji-btn:hover,
+html.dark .quick-emoji-btn:hover {
+  background: var(--surface-2);
+}
+
+/* ==========================================================================
+   网盘排序与多选 (Drive Sort & Multi-Select)
+   ========================================================================== */
+html[data-theme="dark"] .sort-picker,
+html.dark .sort-picker {
+  background: var(--surface-0);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .sort-select,
+html.dark .sort-select {
+  color: var(--text);
+  background: var(--surface-0);
+}
+
+html[data-theme="dark"] .sort-order-btn,
+html.dark .sort-order-btn {
+  background: var(--surface-1);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .sort-order-btn:hover,
+html.dark .sort-order-btn:hover {
+  background: var(--surface-2);
+}
+
+html[data-theme="dark"] .card-select-checkbox,
+html.dark .card-select-checkbox {
+  background: rgba(15, 23, 42, 0.85);
+}
+
+html[data-theme="dark"] .file-grid-card.is-selected,
+html.dark .file-grid-card.is-selected {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  box-shadow: 0 0 0 1px #10b981;
+}
+
+html[data-theme="dark"] .drive-table-row.is-selected,
+html.dark .drive-table-row.is-selected {
+  background: rgba(16, 185, 129, 0.12) !important;
+}
+
+/* ==========================================================================
+   网盘浮动批量操作栏 (Drive Batch Bar)
+   ========================================================================== */
+html[data-theme="dark"] .drive-batch-bar,
+html.dark .drive-batch-bar {
+  background: var(--surface-1);
+  border-color: var(--border);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+}
+
+html[data-theme="dark"] .batch-bar-btn,
+html.dark .batch-bar-btn {
+  background: var(--surface-0);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .batch-bar-btn:hover,
+html.dark .batch-bar-btn:hover {
+  background: var(--surface-2);
+}
+
+/* ==========================================================================
+   网盘在线代码/文本编辑器 (Drive Online Editor)
+   ========================================================================== */
+html[data-theme="dark"] .editor-pane,
+html.dark .editor-pane {
+  background: var(--surface-0);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .editor-pane-header,
+html.dark .editor-pane-header {
+  background: var(--surface-1);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .editor-textarea,
+html.dark .editor-textarea {
+  background: var(--surface-0);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .editor-live-preview,
+html.dark .editor-live-preview {
+  background: var(--surface-0);
+}
+
+/* ==========================================================================
+   聊天附件文件卡片 (Chat File Card)
+   ========================================================================== */
+html[data-theme="dark"] .chat-file-card,
+html.dark .chat-file-card {
+  background: var(--surface-1);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .chat-file-card:hover,
+html.dark .chat-file-card:hover {
+  background: var(--surface-2);
+  border-color: #10b981;
+}
+
+html[data-theme="dark"] .file-card-icon-box,
+html.dark .file-card-icon-box {
+  background: var(--surface-0);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .file-card-name,
+html.dark .file-card-name {
+  color: var(--text);
+}
+
+html[data-theme="dark"] .file-action-btn,
+html.dark .file-action-btn {
+  background: var(--surface-0);
+  border-color: var(--border);
+  color: var(--text);
+}

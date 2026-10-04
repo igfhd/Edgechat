@@ -1,0 +1,331 @@
+.registration-invite-manager {
+  min-width: 0;
+  display: grid;
+  gap: var(--admin-space-sm);
+}
+
+.registration-invite-manager__heading h3,
+.invite-list-heading h3 {
+  margin: 0;
+  color: var(--admin-text);
+  font-size: 0.94rem;
+  font-weight: 750;
+}
+
+.invite-create-panel.ui-surface {
+  min-width: 0;
+  padding: var(--admin-space-sm);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius-panel);
+  background: var(--admin-panel);
+  box-shadow: var(--admin-shadow);
+}
+
+.invite-create-form {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.2fr) 104px auto;
+  align-items: end;
+  gap: var(--admin-space-xs);
+}
+
+.invite-create-form select {
+  width: 100%;
+  min-height: 38px;
+  padding: var(--admin-space-2xs) var(--admin-space-xs);
+  border: 1px solid var(--admin-border-strong);
+  border-radius: var(--admin-radius-control);
+  background: var(--admin-panel);
+  color: var(--admin-text);
+  font-size: 0.82rem;
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--admin-duration);
+}
+
+.invite-create-form select:focus {
+  border-color: var(--admin-focus);
+}
+
+.invite-create-form > .ui-button {
+  min-width: 96px;
+}
+
+.invite-list-heading {
+  margin-block-start: var(--admin-space-xs);
+}
+
+.invite-list-heading h3 {
+  display: flex;
+  align-items: baseline;
+  gap: var(--admin-space-2xs);
+}
+
+.invite-list-heading h3 span {
+  color: var(--admin-muted);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.invite-list {
+  min-width: 0;
+  display: grid;
+  gap: var(--admin-space-xs);
+}
+
+.admin-invite-card.ui-surface {
+  min-width: 0;
+  display: grid;
+  gap: var(--admin-space-xs);
+  padding: var(--admin-space-sm);
+  border: 1px solid var(--admin-border-strong);
+  border-radius: var(--admin-radius-panel);
+  background: var(--admin-panel);
+  box-shadow: var(--admin-shadow);
+}
+
+.admin-invite-card__head {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--admin-space-xs);
+}
+
+.admin-invite-card__title-group {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--admin-space-2xs);
+}
+
+.admin-invite-card__title-group strong {
+  min-width: 0;
+  color: var(--admin-text);
+  font-size: 0.84rem;
+  overflow-wrap: anywhere;
+}
+
+.admin-invite-card__group-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  min-height: 20px;
+  padding: 1px 7px;
+  border-radius: var(--admin-radius-pill);
+  background: var(--admin-primary-soft, rgba(44, 74, 110, 0.08));
+  color: var(--admin-primary, #2c4a6e);
+  font-size: 0.68rem;
+  font-weight: 650;
+  border: 1px solid var(--admin-border);
+  white-space: nowrap;
+}
+
+.admin-invite-card__status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding-inline: var(--admin-space-2xs);
+  border: 1px solid currentcolor;
+  border-radius: var(--admin-radius-pill);
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.admin-invite-card__status--available {
+  background: var(--admin-success-bg);
+  color: var(--admin-success);
+}
+
+.admin-invite-card__status--disabled {
+  background: var(--admin-active);
+  color: var(--admin-muted);
+}
+
+.admin-invite-card__status--exhausted {
+  background: var(--admin-warning-bg);
+  color: var(--admin-warning);
+}
+
+.admin-invite-card__url {
+  padding: var(--admin-space-2xs) var(--admin-space-xs);
+  border-radius: var(--admin-radius-control);
+  background: var(--admin-subtle);
+  color: var(--admin-green-hover);
+  font-family: var(--admin-font-mono);
+  font-size: 0.68rem;
+  line-height: 1.45;
+  word-break: break-all;
+}
+
+.admin-invite-card__usage,
+.admin-invite-card__consumer {
+  margin: 0;
+  color: var(--admin-text);
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+.admin-invite-card__usage {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--admin-space-3xs) var(--admin-space-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-invite-card__remaining,
+.admin-invite-card__consumer {
+  color: var(--admin-muted);
+}
+
+.admin-invite-card__footer {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--admin-space-xs);
+  padding-block-start: var(--admin-space-xs);
+  border-block-start: 1px solid var(--admin-border);
+}
+
+.admin-invite-card__provenance,
+.admin-invite-card__actions {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--admin-space-2xs);
+}
+
+.admin-invite-card__provenance {
+  flex-wrap: wrap;
+  color: var(--admin-muted);
+  font-size: 0.7rem;
+}
+
+.admin-invite-card__actions {
+  margin-inline-start: auto;
+}
+
+.admin-invite-menu {
+  position: relative;
+}
+
+.admin-invite-menu__trigger {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--admin-border-strong);
+  border-radius: var(--admin-radius-control);
+  background: var(--admin-panel);
+  color: var(--admin-muted);
+  cursor: pointer;
+  list-style: none;
+  transition: background-color var(--admin-duration), color var(--admin-duration);
+}
+
+.admin-invite-menu__trigger::-webkit-details-marker {
+  display: none;
+}
+
+.admin-invite-menu__trigger:hover,
+.admin-invite-menu__trigger:active,
+.admin-invite-menu[open] .admin-invite-menu__trigger {
+  background: var(--admin-active);
+  color: var(--admin-text);
+}
+
+.admin-invite-menu__trigger:focus-visible {
+  outline: 2px solid var(--admin-focus);
+  outline-offset: 2px;
+}
+
+.admin-invite-menu__popover {
+  position: absolute;
+  z-index: 4;
+  inset-block-start: calc(100% + var(--admin-space-3xs));
+  inset-inline-end: 0;
+  min-width: 132px;
+  padding: var(--admin-space-3xs);
+  border: 1px solid var(--admin-border-strong);
+  border-radius: var(--admin-radius-control);
+  background: var(--admin-panel);
+  box-shadow: var(--admin-shadow-raised);
+}
+
+.admin-invite-menu__popover button {
+  width: 100%;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  gap: var(--admin-space-2xs);
+  padding-inline: var(--admin-space-xs);
+  border: 0;
+  border-radius: var(--admin-radius-control);
+  background: transparent;
+  color: var(--admin-danger);
+  font-size: 0.76rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.admin-invite-menu__popover button:hover,
+.admin-invite-menu__popover button:active {
+  background: var(--admin-danger-bg);
+}
+
+.admin-invite-menu__popover button:focus-visible {
+  outline: 2px solid var(--admin-focus);
+  outline-offset: -2px;
+}
+
+@media (max-width: 56rem) {
+  .invite-create-form {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .invite-create-form__note {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 40rem) {
+  .invite-create-form {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--admin-space-xs);
+  }
+
+  .invite-create-form__note {
+    grid-column: auto;
+  }
+
+  .invite-create-form input,
+  .invite-create-form select {
+    min-height: 42px;
+    font-size: 0.88rem;
+  }
+
+  .invite-create-form > .ui-button {
+    width: 100%;
+    min-height: 42px;
+  }
+
+  .admin-invite-card.ui-surface {
+    padding: var(--admin-space-xs);
+  }
+
+  .admin-invite-card__head {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--admin-space-2xs);
+  }
+
+  .admin-invite-card__status {
+    align-self: flex-start;
+  }
+}

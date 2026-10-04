@@ -1,0 +1,129 @@
+.admin-topbar {
+  min-height: var(--admin-topbar-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--admin-space-sm);
+  padding-inline: var(--admin-space-lg);
+  background: var(--admin-panel);
+  border-block-end: 1px solid var(--admin-border);
+  flex-shrink: 0;
+}
+
+.admin-topbar__left {
+  display: flex;
+  align-items: center;
+  gap: var(--admin-space-sm);
+  min-width: 0;
+}
+
+.admin-topbar__menu-toggle {
+  display: none;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius-control);
+  background: var(--admin-panel);
+  color: var(--admin-text);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color var(--admin-duration);
+}
+
+.admin-topbar__menu-toggle:hover,
+.admin-topbar__menu-toggle:active {
+  background: var(--admin-active);
+}
+
+.admin-topbar__title {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--admin-space-xs);
+  color: var(--admin-text);
+}
+
+.admin-topbar__title h1 {
+  min-width: 0;
+  margin: 0;
+  font-size: 1.18rem;
+  font-weight: 750;
+  letter-spacing: 0;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.admin-topbar__settings {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--admin-space-xs);
+  padding-inline: var(--admin-space-md);
+  border: 1px solid var(--admin-ink);
+  border-radius: var(--admin-radius-control);
+  background: var(--admin-ink);
+  color: var(--admin-panel);
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background-color var(--admin-duration), border-color var(--admin-duration);
+}
+
+.admin-topbar__settings:hover,
+.admin-topbar__settings:active {
+  border-color: var(--admin-ink-hover);
+  background: var(--admin-ink-hover);
+}
+
+.admin-topbar__settings:focus-visible {
+  outline: 2px solid var(--admin-focus);
+  outline-offset: 2px;
+}
+
+.admin-topbar__settings:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.admin-topbar__icon-btn {
+  width: 38px;
+  height: 38px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius-control);
+  background: var(--admin-panel);
+  color: var(--admin-text);
+  cursor: pointer;
+  transition: all var(--admin-duration);
+}
+
+.admin-topbar__icon-btn:hover {
+  background: var(--admin-active);
+}
+
+@media (max-width: 56rem) {
+  .admin-topbar__menu-toggle {
+    display: grid;
+  }
+}
+
+@media (max-width: 40rem) {
+  .admin-topbar {
+    min-height: 52px;
+    padding-inline: var(--admin-space-xs);
+  }
+
+  .admin-topbar__title h1 {
+    font-size: 1rem;
+  }
+
+  .admin-topbar__settings {
+    min-height: 34px;
+    padding-inline: var(--admin-space-xs);
+    font-size: 0.78rem;
+  }
+}
