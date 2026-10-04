@@ -1,0 +1,117 @@
+### Edgechat 核心环境变量与配置变量说明
+
+================================================================================
+一、Cloudflare Worker 运行时环境变量 (wrangler.toml [vars] / Cloudflare 环境变量)
+================================================================================
+
+ROUTE_PREFIX = 隐藏入口路径前缀（支持单前缀或多前缀，用逗号/分号/空格隔开，例如 "secret1,secret2"；留空代表不启用隐藏入口，直接根路径访问）
+DISGUISE_HOST = 伪装反代目标网站/域名（当未匹配隐藏入口或直接访问域名根路径时触发透明反代；支持填入 "nginx" 展示官方仿真 Nginx 欢迎页与 404，或填入真实域名如 "fentybeauty.com"、"sephora.com"）
+ADMIN_USERNAMES = 默认管理员用户名列表（英文逗号分隔，例如 "admin,root"，首次登录匹配时自动赋予管理员身份）
+MESSAGE_RETENTION_DAYS = 消息默认保留天数（默认 7 天，超出天数的消息会被后台定时 GC 任务自动清理）
+SOFT_DELETE_RETENTION_DAYS = 软删除保留天数（默认 60 天，已删除消息与回收站项目的物理保留期）
+MAX_FILE_SIZE = 单个上传文件最大字节数限制（默认 20971520 即 20MB；可通过管理后台 upload_max_file_size_mb 动态覆盖）
+ALLOWED_FILE_TYPES = 允许上传的文件类型/MIME前缀列表（例如 "image/,video/,application/pdf,text/"）
+GC_BATCH_SIZE = 垃圾回收（GC）单批次清理条数（默认 500）
+GC_MAX_BATCHES_PER_RUN = 垃圾回收每次执行的最大批次数（默认 20）
+R2_DELETE_MAX_RETRY = R2 孤儿文件删除失败的最大重试次数（默认 8）
+
+
+================================================================================
+二、Cloudflare 资源绑定变量 (wrangler.toml Bindings / Cloudflare 基础设施)
+================================================================================
+
+DB = D1 数据库绑定（系统核心关系型数据库，默认数据库名 "cfchat-db"）
+SESSIONS = KV 命名空间绑定（用于用户登录 Session 会话、短期临时 Ticket 鉴权）
+FILES = R2 存储桶绑定（用于群聊附件、头像与云盘文件存储，默认存储桶名 "cfchat-files"）
+CHANNEL_ROOM = Durable Object 实时房间绑定（驱动频道与群聊的 WebSocket 广播与在线状态）
+USER_INBOX = Durable Object 用户收件箱绑定（驱动个人私聊推送、未读红点与系统通知）
+SCHEDULER = Durable Object 任务调度器绑定（驱动定时 Cron 与后台定期任务）
+ASSETS = 静态资源绑定（前端 Vue3 SPA 单页应用静态资源托管）
+
+
+================================================================================
+三、服务端密钥与安全加密变量 (Worker Secrets / Keyring)
+================================================================================
+
+EDGECHAT_ENCRYPTION_KEYRING = 服务端主密钥环（JSON 格式，由自动化部署脚本或 CI/CD 生成注入，用于端到端加密元数据保护与敏感字段加密）
+EDGECHAT_ENCRYPTION_ACTIVE_KEY_ID = 当前生效的主加密密钥版本 ID
+EDGECHAT_ENCRYPTION_KEY_<N> = 独立版本化密钥变量（例如 EDGECHAT_ENCRYPTION_KEY_1，用于平滑密钥轮换）
+
+
+================================================================================
+四、实时音视频通话配置 (Cloudflare Calls)
+（可在管理后台动态设置，或配置为 Worker 环境变量）
+================================================================================
+
+CALLS_ENABLED / calls_enabled = 语音/视频通话功能开关（1 为开启，0 为关闭）
+CALLS_APP_ID / calls_app_id = Cloudflare Calls SFU 应用 ID (App ID)
+CALLS_APP_SECRET / calls_app_secret = Cloudflare Calls SFU 应用密钥 (App Secret)
+
+
+================================================================================
+五、第三方对象存储与云盘加速配置 (S3 / R2 / Google Drive)
+（可在管理后台动态设置，或配置为 Worker 环境变量）
+================================================================================
+
+STORAGE_TYPE / storage_type = 存储后端类型（可选 "r2" 或 "gdrive"）
+CLOUDFLARE_ACCOUNT_ID / R2_ACCOUNT_ID / storage_account_id = Cloudflare Account ID（用于前端直传 R2 S3 签名生成）
+R2_BUCKET_NAME / storage_bucket_name = R2 存储桶名称（默认 "cfchat-files"）
+R2_ACCESS_KEY_ID / AWS_ACCESS_KEY_ID / storage_access_key_id = S3 / R2 API 访问密钥 ID
+R2_SECRET_ACCESS_KEY / AWS_SECRET_ACCESS_KEY / storage_secret_access_key = S3 / R2 API 私有密钥 Secret
+R2_S3_ENDPOINT / AWS_ENDPOINT / storage_endpoint = S3 兼容端点 URL（例如 "https://<account_id>.r2.cloudflarestorage.com"）
+AWS_REGION / storage_region = S3 区域（默认 "auto" 或 "us-east-1"）
+STORAGE_PUBLIC_DOMAIN / storage_public_domain = 自定义公共 CDN 加速下载域名（可选，用于文件直链加速）
+
+GDRIVE_CLIENT_ID / gdrive_client_id = Google Cloud OAuth2 Client ID
+GDRIVE_CLIENT_SECRET / gdrive_client_secret = Google Cloud OAuth2 Client Secret
+GDRIVE_REFRESH_TOKEN / gdrive_refresh_token = Google Drive OAuth2 Refresh Token
+GDRIVE_FOLDER_ID / gdrive_folder_id = Google Drive 根存储目录 Folder ID
+
+
+================================================================================
+六、Web 管理后台动态设置项 (保存在 D1 数据库 site_settings 表中，后台即时修改生效)
+================================================================================
+
+site_name = 站点/系统名称（默认 "Edgechat"）
+site_icon_url = 站点图标 / Logo 图片 URL（留空使用默认图标）
+message_retention_days = 消息保留天数（1-3650 天，默认 7）
+auto_cleanup_enabled = 自动清理开关（1 = 开启每天自动 GC，0 = 关闭）
+upload_restriction_mode = 附件上传限制模式（"none" = 不限制, "allowlist" = 白名单模式, "blocklist" = 黑名单模式）
+upload_allowed_types = 允许上传的文件格式/扩展名列表（逗号分隔，如 "image/*, video/*, audio/*, pdf, docx, xlsx, zip"）
+upload_blocked_types = 禁止上传的文件格式/扩展名列表（逗号分隔，如 "exe, bat, cmd, sh, php"）
+upload_max_file_size_mb = 单文件最大上传体积限制（MB，范围 1-100MB，默认 20MB）
+
+
+================================================================================
+七、一键部署与运维环境变量 (.env.local / 部署脚本 / Web Deployer)
+================================================================================
+
+CLOUDFLARE_API_TOKEN = Cloudflare API 令牌（需具备 Workers、D1、KV、R2 的 Edit 权限）
+CLOUDFLARE_ACCOUNT_ID = Cloudflare 账户 ID
+CLOUDFLARE_EMAIL = Cloudflare 账号登录邮箱（与 Global API Key 搭配使用）
+CLOUDFLARE_API_KEY = Cloudflare Global API Key
+EDGECHAT_ADMIN_USERNAME = 部署时初始管理员用户名（默认 "admin"）
+EDGECHAT_ADMIN_PASSWORD = 部署时初始管理员密码（留空自动生成强密码）
+EDGECHAT_ADMIN_DISPLAY_NAME = 部署时初始管理员昵称（默认 "Administrator"）
+EDGECHAT_WORKER_NAME = Worker 服务名（默认 "cfchat"）
+EDGECHAT_D1_DATABASE_NAME = D1 数据库名（默认 "cfchat-db"）
+EDGECHAT_KV_NAMESPACE_TITLE = KV 命名空间名（默认 "SESSIONS"）
+EDGECHAT_R2_BUCKET_NAME = R2 存储桶名（默认 "cfchat-files"）
+
+
+================================================================================
+八、修改与生效方式说明
+================================================================================
+
+1. 【无需重新部署（云端修改）】：
+   登录 Cloudflare 控制台 -> Workers & Pages -> 点击进入 Worker -> Settings -> Variables and Secrets。
+   直接编辑 ROUTE_PREFIX、DISGUISE_HOST 等变量，保存后立即生效。
+
+2. 【管理后台修改（即时生效）】：
+   登录 EdgeChat 管理员账号 -> 进入管理后台 -> 可视化配置站点名称、保留天数、上传黑白名单、存储引擎（R2/Google Drive）及 Calls 语音通话。修改后直接存入 D1 数据库即刻生效。
+
+3. 【本地配置文件修改（重新部署生效）】：
+   编辑项目根目录的 `wrangler.toml` 中的 `[vars]` 区域，修改后运行 `npx wrangler deploy` 重新发布。
+
+4. 【Linux 脚本一键修改】：
+   运行 `./deploy_edgechat_Linux.sh disguise` 交互式快速切换伪装网站与入口前缀。

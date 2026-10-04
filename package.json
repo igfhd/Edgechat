@@ -1,0 +1,46 @@
+{
+	"name": "edgechat",
+	"version": "1.0.3",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "node --test",
+		"dev:frontend": "vite --config frontend/vite.config.js",
+		"dev:demo": "vite --config frontend/vite.demo.config.js",
+		"build:frontend": "vite build --config frontend/vite.config.js",
+		"build:demo": "vite build --config frontend/vite.demo.config.js",
+		"build:capacitor:web": "vite build --config frontend/vite.capacitor.config.js",
+		"capacitor:sync": "npm run build:capacitor:web && cd capacitor && npx cap sync android",
+		"build:capacitor": "npm run capacitor:sync && node capacitor/scripts/run-gradle.mjs",
+		"open:capacitor:android": "cd capacitor && npx cap open android",
+		"build": "npm run build:frontend",
+		"biome:write": "biome check --write .",
+		"biome:check": "biome check .",
+		"biome:ci": "biome ci .",
+		"check": "npm run biome:ci && npm run build",
+		"deploy": "npm run build && wrangler deploy",
+		"deploy:demo": "npm run build:demo && wrangler deploy --config wrangler.demo.toml",
+		"d1:apply": "wrangler d1 execute cfchat-db --file ./worker/schema.sql"
+	},
+	"dependencies": {
+		"@capacitor/android": "^8.5.1",
+		"@capacitor/core": "^8.5.1",
+		"@lucide/vue": "^1.28.0",
+		"aws4fetch": "^1.0.20",
+		"fflate": "^0.8.3",
+		"hono": "^4.8.3",
+		"vue": "^3.5.13",
+		"vue-router": "^4.5.1"
+	},
+	"devDependencies": {
+		"@capacitor/cli": "^8.5.1",
+		"@biomejs/biome": "2.4.11",
+		"@vitejs/plugin-vue": "^6.0.8",
+		"sql.js": "1.14.2",
+		"vite": "^8.2.1",
+		"wrangler": "^4.11.1"
+	},
+	"overrides": {
+		"undici": "7.29.0"
+	}
+}

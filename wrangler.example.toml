@@ -1,0 +1,62 @@
+# Legacy Worker service name kept to avoid creating a new production Worker during rename cleanup.
+name = "cfchat"
+main = "worker/src/index.js"
+compatibility_date = "2026-04-05"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+ADMIN_USERNAMES = "admin"
+MESSAGE_RETENTION_DAYS = "7"
+SOFT_DELETE_RETENTION_DAYS = "60"
+GC_BATCH_SIZE = "500"
+GC_MAX_BATCHES_PER_RUN = "20"
+R2_DELETE_MAX_RETRY = "8"
+ALLOWED_FILE_TYPES = "image/,video/,application/pdf,text/"
+MAX_FILE_SIZE = "20971520"
+ROUTE_PREFIX = ""
+DISGUISE_HOST = "nginx"
+
+[[d1_databases]]
+binding = "DB"
+# Legacy D1 resource name kept intentionally; do not rename without a data migration plan.
+database_name = "cfchat-db"
+database_id = "YOUR_D1_DATABASE_ID_HERE"
+
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "YOUR_KV_NAMESPACE_ID_HERE"
+
+[[r2_buckets]]
+binding = "FILES"
+# Legacy R2 bucket name kept intentionally; code/docs use Edgechat branding.
+bucket_name = "cfchat-files"
+
+[[durable_objects.bindings]]
+name = "CHANNEL_ROOM"
+class_name = "ChannelRoom"
+
+[[durable_objects.bindings]]
+name = "SCHEDULER"
+class_name = "Scheduler"
+
+[[durable_objects.bindings]]
+name = "USER_INBOX"
+class_name = "UserInbox"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["ChannelRoom", "Scheduler"]
+
+[[migrations]]
+tag = "v2"
+new_sqlite_classes = ["UserInbox"]
+
+[assets]
+directory = "./frontend/dist"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first = true
+
+[triggers]
+# Cloudflare Cron 按 UTC 执行；23:55 UTC = 北京时间每天 07:55（每日额度重置前 5 分钟，即便消耗较多额度，5 分钟后 00:00 UTC 立即重置）
+crons = ["55 23 * * *"]

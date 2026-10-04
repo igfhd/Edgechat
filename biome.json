@@ -1,0 +1,69 @@
+{
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true
+	},
+	"files": {
+		"includes": [
+			"**",
+			"!dist",
+			"!frontend/dist",
+			"!**/generated",
+			"!**/*.min.js",
+			"!FDIndexv6_webdav_backend.js"
+		]
+	},
+  "formatter": {
+    "enabled": false
+  },
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"complexity": {
+				"noImportantStyles": "off"
+			}
+		}
+	},
+	"overrides": [
+		{
+			"includes": [
+				"frontend/src/components/drive/DriveArchiveViewer.vue",
+				"frontend/src/components/chat/AudioCallModal.vue",
+				"frontend/src/pages/ChatPage.vue",
+				"frontend/src/pages/AdminUsersPage.vue"
+			],
+			"linter": {
+				"rules": {
+					"correctness": {
+						"noUnknownPseudoClass": "off"
+					},
+					"a11y": {
+						"useAriaPropsForRole": "off"
+					}
+				}
+			}
+		},
+		{
+			"includes": [
+				"frontend/src/components/drive/DriveArchiveViewer.vue",
+				"frontend/src/components/drive/DriveFilePreviewModal.vue"
+			],
+			"linter": {
+				"rules": {
+					"a11y": {
+						"useMediaCaption": "off"
+					}
+				}
+			}
+		}
+	],
+  "assist": {
+    "enabled": false
+  },
+	"html": {
+		"experimentalFullSupportEnabled": true
+	}
+}
