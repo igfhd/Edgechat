@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS user_identity_keys (
+  user_id INTEGER PRIMARY KEY,
+  public_key TEXT NOT NULL,
+  key_version INTEGER NOT NULL DEFAULT 1,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS user_encrypted_key_backups (
+  user_id INTEGER PRIMARY KEY,
+  encrypted_private_key TEXT NOT NULL,
+  backup_salt TEXT NOT NULL,
+  backup_iv TEXT NOT NULL DEFAULT '',
+  key_version INTEGER NOT NULL DEFAULT 1,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
